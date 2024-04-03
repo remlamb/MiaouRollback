@@ -13,9 +13,3 @@
     - Then Open Project in VS
     - In VS use Main as Starting Folder
       
-### Release
-   A release is available if you just want to watch the demo scene without building.
-
-## More
-This Engine was created during my formation at the SAE schools, games programming formation.
-Use SDL2 library for rendering.
