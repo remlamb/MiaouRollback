@@ -1,0 +1,11 @@
+{
+  "name": "rollback",
+  "version-string": "1.0",
+  "dependencies": [
+        "raylib",
+      {
+          "name": "imgui",
+          "features": ["opengl3-binding", "docking-experimental"]
+      }
+    ]
+}
