@@ -52,7 +52,7 @@ class Renderer {
       img.Draw(Vector2{screenWidth * 0.8f, screenHeight * 0.5f});
       omniman.Draw(center, customScale);
 
-      DrawText("Raylib sample !!!", 290, 100, 30, WHITE);
+      DrawText("Raylib sample !!!", screenWidth/2 - 200, 100, 30, WHITE);
     }
     EndDrawing();
   }
