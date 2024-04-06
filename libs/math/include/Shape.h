@@ -230,7 +230,7 @@ namespace Math
         if (rectangle1.Contains(center)) return true;
         if (rectangle2.Contains(center)) return true;
 
-        // Check circles at rectangle corners
+        // Check Colliders at rectangle corners
         const auto corners = {
             minBound,
             maxBound,

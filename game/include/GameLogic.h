@@ -3,7 +3,7 @@
 #include "World.h"
 #include "Timer.h"
 
-struct Circle
+struct ColliderObject
 {
 	Engine::BodyRef bodyRef;
 	Engine::ColliderRef colliderRef;
@@ -11,6 +11,11 @@ struct Circle
 	int CollisionNbr = 0;
 };
 
+struct Player
+{
+	ColliderObject collider;
+	Math::Vec2F position;
+};
 
 class GameLogic : public Engine::ContactListener
 {
@@ -18,26 +23,29 @@ public:
 	Engine::World world_;
 	Engine::Timer timer_;
 
+	Player player;
+
 	std::vector<Engine::BodyRef> _bodyRefs;
 	std::vector<Engine::ColliderRef> _colRefs;
 
-	static constexpr std::size_t CirclesInTheWorld = 5;
-	std::array<Circle, CirclesInTheWorld> circles;
+	int colliderCurrentID = 0;
+	static constexpr std::size_t CirclesInTheWorld = 50;
+	std::vector<ColliderObject> Colliders;
 
-	static constexpr float VelocityMaxOnStart = 80.0f;
+	static constexpr float VelocityMaxOnStart = 10.0f;
 	static constexpr float BorderSizeForElements = 50.0f;
-	static constexpr int CircleSegements = 20;
-	static constexpr int CircleRadius = 12;
-
 	void Init() noexcept;
 	void Update() noexcept;
 	void DeInit() noexcept;
 
+	void Jump();
 
-
-	void CreateCircle() noexcept;
-	void RenderCircle(SDL_Renderer* renderer) noexcept;
+	ColliderObject CreateColliderObject(Math::Vec2F position, float mass, bool isTrigger, Math::ShapeType shape, Engine::BodyType type) noexcept;
+	void CreateCircleColliderObject(Math::Vec2F position, float radius, float mass, bool isTrigger, Engine::BodyType type) noexcept;
+	void CreateRectangleColliderObject(Math::Vec2F position, Math::Vec2F rectMinBound, Math::Vec2F rectMaxBound, float mass, bool isTrigger, Engine::BodyType type) noexcept;
+	void RenderColliderObject() noexcept;
 	void ReverseForceOnBorder() noexcept;
+
 	void OnTriggerEnter(Engine::Collider colliderA,
 		Engine::Collider colliderB) noexcept override;
 	void OnTriggerExit(Engine::Collider colliderA,
