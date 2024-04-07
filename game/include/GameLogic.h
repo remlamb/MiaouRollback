@@ -35,11 +35,22 @@ class GameLogic : public Engine::ContactListener {
 
   static constexpr float VelocityMaxOnStart = 10.0f;
   static constexpr float BorderSizeForElements = 50.0f;
+
+  static constexpr int screenWidth = 1480;
+  //static constexpr int screenWidth = 1080;
+  static constexpr int screenHeight = 720;
+
+  const float borderSize = 20.0f;
+  const Math::Vec2F platformSize{ 200.0f, 40.0f };
+
   void Init() noexcept;
   void Update() noexcept;
   void DeInit() noexcept;
 
   void Jump();
+  void Move(bool rightDirection);
+  void Decelerate();
+
 
   ColliderObject CreateColliderObject(Math::Vec2F position, float mass,
                                       bool isTrigger, Math::ShapeType shape,

@@ -10,9 +10,6 @@
 #include "Image.h"
 #include "GameLogic.h"
 
-static constexpr int screenWidth = 1080;
-static constexpr int screenHeight = 720;
-
 class Renderer {
 public:
 	GameLogic game_logic;
@@ -23,7 +20,7 @@ public:
 	ImageCustom omniman;
 	Image icon;
 	float customScale = 0.0f;
-	Vector2 center = { screenWidth * 0.5f, screenHeight * 0.5f };
+	Vector2 center = {GameLogic::screenWidth * 0.5f, GameLogic::screenHeight * 0.5f };
 
 	void Init() {
 		icon = LoadImage("data/weapon.png");
@@ -64,15 +61,25 @@ public:
 				game_logic.Jump();
 			}
 
+			if (IsKeyDown(KEY_D) || IsGamepadButtonDown(0, GAMEPAD_BUTTON_LEFT_FACE_RIGHT)) {
+				game_logic.Move(true);
+			}
+			else if (IsKeyDown(KEY_A) || IsGamepadButtonDown(0, GAMEPAD_BUTTON_LEFT_FACE_LEFT)) {
+				game_logic.Move(false);
+			}
+			else {
+				game_logic.Decelerate();
+			}
+
 			ClearBackground(BLACK);
 
 			game_logic.RenderColliderObject();
 
 			customScale += 0.01f;
-			img.Draw(Vector2{ screenWidth * 0.8f, screenHeight * 0.5f });
+			img.Draw(Vector2{GameLogic::screenWidth * 0.8f, GameLogic::screenHeight * 0.5f });
 			//omniman.Draw(center, customScale);
 
-			DrawText("Coch-marre sample !!!", screenWidth / 2 - 200, 100, 30, WHITE);
+			DrawText("Coch-marre sample !!!", GameLogic::screenWidth / 2 - 200, 100, 30, WHITE);
 		}
 		EndDrawing();
 	}
@@ -84,7 +91,7 @@ void UpdateDrawFrame(void* renderer) {
 }
 
 int main() {
-	InitWindow(screenWidth, screenHeight, "Online Game");
+	InitWindow(GameLogic::screenWidth, GameLogic::screenHeight, "Online Game");
 
 	Renderer renderer;
 	renderer.Init();
