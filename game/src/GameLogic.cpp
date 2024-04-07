@@ -42,6 +42,14 @@ void GameLogic::Init() noexcept {
   auto& body = world_.GetBody(player.collider.bodyRef);
   // body.SetVelocity(Math::Vec2F(0.0f, 10.0f));
   collider.restitution = 0.0f;
+
+  CreateRectangleColliderObject(
+      Math::Vec2F(
+          body.Position() -
+          Math::Vec2F(player.groundedColliderDimension.X * 0.5f, -2.0f)),
+      {0.0f, 0.0f}, player.groundedColliderDimension, 1, true,
+      Engine::BodyType::DYNAMIC);
+  player.groundedCollider = Colliders[colliderCurrentID - 1]; 
 }
 void GameLogic::Update() noexcept {
   for (auto& circle : Colliders) {
@@ -63,9 +71,22 @@ void GameLogic::Update() noexcept {
   }
 
   // player
-  player.collider = Colliders[colliderCurrentID - 1];
   auto& body = world_.GetBody(player.collider.bodyRef);
-  body.AddForce({0, 2000});
+  if (!player.isGrounded)
+  {
+    body.AddForce({0, 100000});
+  }
+  auto& groundedCollider = world_.GetBody(player.groundedCollider.bodyRef);
+  groundedCollider.SetPosition(
+      body.Position() -
+      Math::Vec2F(player.groundedColliderDimension.X * 0.5f, -2.0f));
+
+  std::cout << player.groundedCollider.CollisionNbr << std::endl;
+  if (player.groundedCollider.CollisionNbr > 1) {
+    player.isGrounded = true;
+  } else {
+    player.isGrounded = false;
+  }
 
   world_.Update(timer_.DeltaTime());
 }
@@ -81,7 +102,10 @@ void GameLogic::DeInit() noexcept {
 void GameLogic::Jump() {
   auto& body = world_.GetBody(player.collider.bodyRef);
   // body.SetVelocity(Math::Vec2F(0.0f, -100.0f));
-  body.AddForce(Math::Vec2F(0.0f, -5000.0f));
+  if (player.isGrounded) {
+    // Apply a greater upward force to achieve a faster jump
+    body.SetForce(Math::Vec2F(0.0f, -800000.0f));
+  }
 }
 
 ColliderObject GameLogic::CreateColliderObject(Math::Vec2F position, float mass,
@@ -172,20 +196,18 @@ void GameLogic::RenderColliderObject() noexcept {
 
 void GameLogic::OnTriggerEnter(Engine::Collider colliderA,
                                Engine::Collider colliderB) noexcept {
-  for (auto& collider : Colliders) {
-    const auto currentCollider = world_.GetCollider(collider.colliderRef);
-    if (currentCollider == colliderA || currentCollider == colliderB) {
-      collider.CollisionNbr = true;
-    }
+  auto groundedCollider =
+      world_.GetCollider(player.groundedCollider.colliderRef);
+  if (groundedCollider == colliderA || groundedCollider == colliderB) {
+    player.groundedCollider.CollisionNbr++;
   }
 }
 void GameLogic::OnTriggerExit(Engine::Collider colliderA,
                               Engine::Collider colliderB) noexcept {
-  for (auto& collider : Colliders) {
-    const auto currentCollider = world_.GetCollider(collider.colliderRef);
-    if (currentCollider == colliderA || currentCollider == colliderB) {
-      collider.CollisionNbr = false;
-    }
+  auto groundedCollider =
+      world_.GetCollider(player.groundedCollider.colliderRef);
+  if (groundedCollider == colliderA || groundedCollider == colliderB) {
+    player.groundedCollider.CollisionNbr--;
   }
 }
 void GameLogic::OnCollisionEnter(Engine::Collider colliderA,
