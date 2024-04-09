@@ -37,7 +37,7 @@ namespace Engine
      * @class Collider
      * @brief Represents a collider in a physics simulation.
      *
-     * The Collider class models a collider with properties such as shape, restitution, friction, ID, and reference to a physics body.
+     * The Collider class models a colliderObj with properties such as shape, restitution, friction, ID, and reference to a physics body.
      * It includes methods and properties to query and modify these properties, making it a key component in physics simulations.
      *
      * The class has the following public methods and properties:

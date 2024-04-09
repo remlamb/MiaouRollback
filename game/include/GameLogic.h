@@ -1,23 +1,13 @@
 #pragma once
 #include <raylib.h>
 
+#include "ColliderObject.h"
 #include "Timer.h"
 #include "World.h"
+#include "InputsManager.h"
+#include "Player.h"
 
-struct ColliderObject {
-  Engine::BodyRef bodyRef;
-  Engine::ColliderRef colliderRef;
-  Color color;
-  int CollisionNbr = 0;
-};
 
-struct Player {
-  ColliderObject collider;
-  Math::Vec2F position;
-  bool isGrounded = false;
-  ColliderObject groundedCollider;
-  static constexpr Math::Vec2F groundedColliderDimension{10.0f, 10.0f};
-};
 
 class GameLogic : public Engine::ContactListener {
  public:
@@ -25,6 +15,8 @@ class GameLogic : public Engine::ContactListener {
   Engine::Timer timer_;
 
   Player player;
+  InputsManager inputs;
+
 
   std::vector<Engine::BodyRef> _bodyRefs;
   std::vector<Engine::ColliderRef> _colRefs;
@@ -47,23 +39,7 @@ class GameLogic : public Engine::ContactListener {
   void Update() noexcept;
   void DeInit() noexcept;
 
-  void Jump();
-  void Move(bool rightDirection);
-  void Decelerate();
-
-
-  ColliderObject CreateColliderObject(Math::Vec2F position, float mass,
-                                      bool isTrigger, Math::ShapeType shape,
-                                      Engine::BodyType type) noexcept;
-  void CreateCircleColliderObject(Math::Vec2F position, float radius,
-                                  float mass, bool isTrigger,
-                                  Engine::BodyType type) noexcept;
-  void CreateRectangleColliderObject(Math::Vec2F position,
-                                     Math::Vec2F rectMinBound,
-                                     Math::Vec2F rectMaxBound, float mass,
-                                     bool isTrigger,
-                                     Engine::BodyType type) noexcept;
-  void RenderColliderObject() noexcept;
+  
 
   void OnTriggerEnter(Engine::Collider colliderA,
                       Engine::Collider colliderB) noexcept override;

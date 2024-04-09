@@ -17,8 +17,8 @@ namespace Engine
      * @struct SimplifiedCollider
      * @brief Represents a simplified view of a collider with its reference and axis-aligned bounding box (AABB).
      *
-     * The SimplifiedCollider struct provides a simplified representation of a collider, including its collider reference
-     * and its axis-aligned bounding box (AABB). It is useful for scenarios where a simplified view of a collider's data is needed.
+     * The SimplifiedCollider struct provides a simplified representation of a colliderObj, including its colliderObj reference
+     * and its axis-aligned bounding box (AABB). It is useful for scenarios where a simplified view of a colliderObj's data is needed.
      *
      * The struct has the following members:
      * - `Engine::ColliderRef colliderRef`: The reference to the associated collider.
