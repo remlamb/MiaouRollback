@@ -1,33 +1,33 @@
 #include "Player.h"
 
-void Player::SetUp(Engine::World& world) {
-  // player
-
-  // CreateRectangleColliderObject({ 50 , 650 }, { 0.0, 0.0 }, { 20.0, 20.0 },
-  // 100, false, Engine::BodyType::DYNAMIC);
-  colliderObj.CreateCircleColliderObject({50, 650}, 28.0, 100, false,Engine::BodyType::DYNAMIC, world);
+#include <iostream>
 
 
-  // colliderObj = Colliders[colliderCurrentID - 1];
+Player::Player(Engine::World& world_) : world(world_) {}
+
+void Player::SetUp() {
+  colliderObj.CreateCircleColliderObject(position, ColliderRadius, 1, false,
+                                         Engine::BodyType::DYNAMIC);
   auto& collider = world.GetCollider(colliderObj.colliderRef);
   auto& body = world.GetBody(colliderObj.bodyRef);
   collider.restitution = 0.0f;
 
   groundedColliderObj.CreateRectangleColliderObject(
       Math::Vec2F(body.Position() -
-                  Math::Vec2F(groundedColliderDimension.X * 0.5f, -20.0f)),
+                  Math::Vec2F(groundedColliderDimension.X * 0.5f,
+                              groundedColliderPosY)),
       {0.0f, 0.0f}, groundedColliderDimension, 1, true,
-      Engine::BodyType::DYNAMIC, world);
+      Engine::BodyType::DYNAMIC);
 }
 
-void Player::Update(Engine::World& world) {
+void Player::Update() {
   // player
   auto& body = world.GetBody(colliderObj.bodyRef);
   if (!isGrounded) {
-    body.AddForce({0, 100000});
+    body.AddForce({0, gravity});
   } else {
     // for the rope
-    body.AddForce({0, 1000});
+    body.AddForce({0, ropeGravity});
   }
 
   if (groundedColliderObj.CollisionNbr > 1) {
@@ -38,28 +38,28 @@ void Player::Update(Engine::World& world) {
 
   auto& groundedCollider = world.GetBody(groundedColliderObj.bodyRef);
   groundedCollider.SetPosition(
-      body.Position() - Math::Vec2F(groundedColliderDimension.X * 0.5f, -20.0f));
+      body.Position() -
+      Math::Vec2F(groundedColliderDimension.X * 0.5f, groundedColliderPosY));
+
+  position = body.Position();
 }
 
-void Player::Jump(Engine::World& world) {
+void Player::Jump() {
   auto& body = world.GetBody(colliderObj.bodyRef);
   if (isGrounded) {
-    body.SetVelocity({body.Velocity().X, -580.0f});
+    body.SetVelocity({body.Velocity().X, jumpVelocity});
   }
 }
-void Player::Move(bool rightDirection, Engine::World& world) {
+void Player::Move(bool rightDirection) {
   auto& body = world.GetBody(colliderObj.bodyRef);
-  float targetVelocityX = rightDirection ? 500.0f : -500.0f;
-
-  float acceleration = 0.04f;
+  float targetVelocityX = rightDirection ? moveVelocity : -moveVelocity;
   body.SetVelocity(Math::Vec2F::Lerp(
-      body.Velocity(), {targetVelocityX, body.Velocity().Y}, acceleration));
+      body.Velocity(), {targetVelocityX, body.Velocity().Y}, accelerationTime));
 }
 
-void Player::Decelerate(Engine::World& world) {
+void Player::Decelerate() {
   auto& body = world.GetBody(colliderObj.bodyRef);
-  Math::Vec2F zeroVelocity = {0.0f, body.Velocity().Y};
-  float deceleration = 0.04f;
+  const Math::Vec2F zeroVelocity = {0.0f, body.Velocity().Y};
   body.SetVelocity(
-      Math::Vec2F::Lerp(body.Velocity(), zeroVelocity, deceleration));
+      Math::Vec2F::Lerp(body.Velocity(), zeroVelocity, decelerationTime));
 }

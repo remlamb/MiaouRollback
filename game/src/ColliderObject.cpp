@@ -2,16 +2,15 @@
 
 void ColliderObject::CreateColliderObject(Math::Vec2F position, float mass,
                                           bool isTrigger, Math::ShapeType shape,
-                                          Engine::BodyType type,
-                                          Engine::World& world_) noexcept {
-  bodyRef = world_.CreateBody();
-  auto& newBody = world_.GetBody(bodyRef);
+                                          Engine::BodyType type) noexcept {
+  bodyRef = world.CreateBody();
+  auto& newBody = world.GetBody(bodyRef);
   newBody.SetMass(mass);
   newBody.SetPosition(position);
   newBody.SetVelocity(Math::Vec2F(0, 0));
   newBody.type = type;
-  colliderRef = world_.CreateCollider(bodyRef);
-  auto& newCollider = world_.GetCollider(colliderRef);
+  colliderRef = world.CreateCollider(bodyRef);
+  auto& newCollider = world.GetCollider(colliderRef);
   newCollider._shape = shape;
   newCollider.isTrigger = isTrigger;
   newCollider.restitution = 0.0f;
@@ -37,29 +36,28 @@ void ColliderObject::CreateColliderObject(Math::Vec2F position, float mass,
 
 void ColliderObject::CreateCircleColliderObject(
     Math::Vec2F position, float radius, float mass, bool isTrigger,
-    Engine::BodyType type, Engine::World& world_) noexcept {
-  CreateColliderObject(position, mass, isTrigger, Math::ShapeType::Circle, type,
-                       world_);
-  auto& collider = world_.GetCollider(colliderRef);
-  auto& body = world_.GetBody(bodyRef);
+    Engine::BodyType type) noexcept {
+  CreateColliderObject(position, mass, isTrigger, Math::ShapeType::Circle,
+                       type);
+  auto& collider = world.GetCollider(colliderRef);
+  auto& body = world.GetBody(bodyRef);
   collider.circleShape.SetRadius(radius);
 }
 
 void ColliderObject::CreateRectangleColliderObject(
     Math::Vec2F position, Math::Vec2F rectMinBound, Math::Vec2F rectMaxBound,
-    float mass, bool isTrigger, Engine::BodyType type,
-    Engine::World& world_) noexcept {
+    float mass, bool isTrigger, Engine::BodyType type) noexcept {
   CreateColliderObject(position, mass, isTrigger, Math::ShapeType::Rectangle,
-                       type, world_);
-  auto& collider = world_.GetCollider(colliderRef);
-  auto& body = world_.GetBody(bodyRef);
+                       type);
+  auto& collider = world.GetCollider(colliderRef);
+  auto& body = world.GetBody(bodyRef);
   collider.rectangleShape.SetMinBound(rectMinBound);
   collider.rectangleShape.SetMaxBound(rectMaxBound);
 }
 
-void ColliderObject::RenderColliderObject(Engine::World& world_) noexcept {
-  auto& curent_collider = world_.GetCollider(colliderRef);
-  auto& body = world_.GetBody(bodyRef);
+void ColliderObject::RenderColliderObject() const noexcept {
+  auto& curent_collider = world.GetCollider(colliderRef);
+  auto& body = world.GetBody(bodyRef);
   switch (curent_collider._shape) {
     case Math::ShapeType::Rectangle:
       DrawRectangleLines(curent_collider.rectangleShape.MinBound().X,

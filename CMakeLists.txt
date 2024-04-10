@@ -74,7 +74,7 @@ set_target_properties(game PROPERTIES LINKER_LANGUAGE CXX)
 target_include_directories(game PUBLIC game/include/)
 target_link_libraries(game PRIVATE raylib imgui::imgui rl_imgui math common physics)
 
-add_executable(main main.cpp)
+add_executable(main main/main.cpp)
 target_link_libraries(main PRIVATE raylib imgui::imgui rl_imgui math common physics game)
 
 if (EMSCRIPTEN)
@@ -82,6 +82,11 @@ if (EMSCRIPTEN)
         string(APPEND data_dir "@data")
         set_target_properties(main PROPERTIES LINK_FLAGS "--preload-file ${data_dir}")
 endif ()
+
+if (NOT EMSCRIPTEN)
+    add_executable(input_test main/input_test.cpp)
+    target_link_libraries(input_test PRIVATE game raylib imgui::imgui rl_imgui math common physics)
+endif()
 
 # Copy all of the resource files to the destination
 file(COPY ${data_files} DESTINATION "data/")
