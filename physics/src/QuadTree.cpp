@@ -1,6 +1,6 @@
 #include "QuadTree.h"
 
-namespace Engine
+namespace Physics
 {
     void QuadTree::Subdivide(QuadNode& node)
     {
@@ -124,7 +124,7 @@ namespace Engine
                 auto& colliderB = node.colliders[j];
 
                 nodeColliderPairs.push_back(
-                        Engine::ColliderPair{colliderA.colliderRef, colliderB.colliderRef}); // now i et j
+                        Physics::ColliderPair{colliderA.colliderRef, colliderB.colliderRef}); // now i et j
             }
 
             if (node.children[0] != nullptr)
@@ -145,14 +145,14 @@ namespace Engine
         }
     }
 
-    void QuadTree::FindInChildrenNodePossiblePairs(QuadNode& node, Engine::ColliderRef& colliderRef) noexcept
+    void QuadTree::FindInChildrenNodePossiblePairs(QuadNode& node, Physics::ColliderRef& colliderRef) noexcept
     {
 #ifdef TRACY_ENABLE
         ZoneScoped;
 #endif
         for (auto& nodeCollider: node.colliders)
         {
-            nodeColliderPairs.push_back(Engine::ColliderPair{colliderRef, nodeCollider.colliderRef});
+            nodeColliderPairs.push_back(Physics::ColliderPair{colliderRef, nodeCollider.colliderRef});
         }
 
         if (node.children[0] != nullptr)

@@ -1,21 +1,20 @@
 #pragma once
 #include <raylib.h>
 
-#include "ColliderObject.h"
+#include "Collider.h"
 #include "InputsManager.h"
-#include "Player.h"
+#include "PlayerManager.h"
 #include "Timer.h"
 #include "World.h"
 
-class GameLogic : public Engine::ContactListener {
+class GameLogic{
  public:
-  Engine::World world_;
-  Engine::Timer timer_;
+  Physics::World world_;
+  Physics::Timer timer_;
 
-  Player player{world_};
-  Player player2{world_};
+  PlayerManager player{&world_};
   InputsManager inputs;
-  std::vector<ColliderObject> Colliders;
+  std::vector<game::Collider> Colliders;
 
   static constexpr int screenWidth = 1480;
   static constexpr int screenHeight = 720;
@@ -28,13 +27,4 @@ class GameLogic : public Engine::ContactListener {
   void DeInit() noexcept;
 
   void ManageInput() noexcept;
-
-  void OnTriggerEnter(Engine::Collider colliderA,
-                      Engine::Collider colliderB) noexcept override;
-  void OnTriggerExit(Engine::Collider colliderA,
-                     Engine::Collider colliderB) noexcept override;
-  void OnCollisionEnter(Engine::Collider colliderA,
-                        Engine::Collider colliderB) noexcept override;
-  void OnCollisionExit(Engine::Collider colliderA,
-                       Engine::Collider colliderB) noexcept override;
 };

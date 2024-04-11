@@ -2,7 +2,7 @@
 
 #include <chrono>
 
-namespace Engine
+namespace Physics
 {
     /**
      * @class Timer

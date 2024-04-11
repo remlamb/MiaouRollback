@@ -3,7 +3,7 @@
 #include "Vec2.h"
 
 
-namespace Engine
+namespace Physics
 {
     /**
      * @enum BodyType

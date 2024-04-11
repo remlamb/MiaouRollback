@@ -10,7 +10,7 @@
 #include "Image.h"
 #include "imgui_impl_raylib.h"
 
-class Renderer {
+class App {
  public:
   float packetDelayMin = 0.1f;
   float packetDelayMax = 0.3f;
@@ -70,13 +70,13 @@ class Renderer {
 
 // Update and Draw one frame
 void UpdateDrawFrame(void* renderer) {
-  static_cast<Renderer*>(renderer)->Loop();
+  static_cast<App*>(renderer)->Loop();
 }
 
 int main() {
   InitWindow(1080, 720, "Input Test");
 
-  Renderer renderer;
+  App renderer;
   renderer.Init();
 
 #ifdef PLATFORM_WEB

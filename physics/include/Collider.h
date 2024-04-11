@@ -3,7 +3,7 @@
 #include "Body.h"
 #include <unordered_set>
 
-namespace Engine
+namespace Physics
 {
     /**
      * @struct ColliderRef

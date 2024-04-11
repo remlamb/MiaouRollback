@@ -1,7 +1,7 @@
 #include "World.h"
 #include "../../common/include/Metrics.h"
 
-namespace Engine
+namespace Physics
 {
     void World::Init() noexcept
     {
@@ -134,7 +134,7 @@ namespace Engine
         return _colliders[colliderRef.index];
     }
 
-    void World::DestroyCollider(Engine::ColliderRef colliderRef) noexcept
+    void World::DestroyCollider(Physics::ColliderRef colliderRef) noexcept
     {
         _colliders[colliderRef.index] = Collider();
         _collidersGenIndices[colliderRef.index]++;

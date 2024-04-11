@@ -11,7 +11,7 @@
 #include <TracyC.h>
 #endif
 
-namespace Engine
+namespace Physics
 {
     /**
      * @struct SimplifiedCollider
@@ -26,7 +26,7 @@ namespace Engine
  */
     struct SimplifedCollider
     {
-        Engine::ColliderRef colliderRef;
+        Physics::ColliderRef colliderRef;
         Math::RectangleF aabb;
     };
 
@@ -144,7 +144,7 @@ namespace Engine
          * @param node The QuadNode to search for possible pairs.
          * @param colliderRef Reference to the collider to compare with.
          */
-        void FindInChildrenNodePossiblePairs(QuadNode& node, Engine::ColliderRef& colliderRef) noexcept;
+        void FindInChildrenNodePossiblePairs(QuadNode& node, Physics::ColliderRef& colliderRef) noexcept;
 
         /**
          * @brief Clears the QuadTree, resetting it to an empty state.

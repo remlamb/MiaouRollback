@@ -10,7 +10,7 @@
 #include "GameLogic.h"
 #include "Image.h"
 
-class Renderer {
+class App {
  public:
   GameLogic game_logic;
 
@@ -18,7 +18,6 @@ class Renderer {
   Music music;
 
   ImageCustom img;
-  ImageCustom img2;
   Image icon;
   float customScale = 0.0f;
   Vector2 center = {GameLogic::screenWidth * 0.5f,
@@ -29,7 +28,6 @@ class Renderer {
     SetWindowIcon(icon);
 
     img.Setup("data/2222.png", 1.0f, Pivot::Center);
-    img2.Setup("data/omniman.png", 1.8f, Pivot::Center);
     InitAudioDevice();
     sound = LoadSound("data/walkman.wav");
     music = LoadMusicStream("data/music.wav");
@@ -42,7 +40,6 @@ class Renderer {
   }
 
   void Deinit() {
-    img2.TearDown();
     img.TearDown();
     UnloadImage(icon);
     UnloadSound(sound);  // Unload sound
@@ -62,14 +59,13 @@ class Renderer {
       ClearBackground(BLACK);
 
       customScale += 0.01f;
-      img.Draw(Vector2{GameLogic::screenWidth * 0.8f,
-                       GameLogic::screenHeight * 0.5f});
+       img.Draw(Vector2{GameLogic::screenWidth * 0.8f,
+       GameLogic::screenHeight * 0.5f});
 
       //img.Draw(
       //    Vector2{game_logic.player.position.X, game_logic.player.position.Y},
-      //    0.2f);
+      //    0.4f);
 
-      // img2.Draw(center, customScale);
       // DrawText("Coch-marre sample !!!", GameLogic::screenWidth / 2 - 200,
       // 100,
       //          30, WHITE);
@@ -83,14 +79,12 @@ class Renderer {
 };
 
 // Update and Draw one frame
-void UpdateDrawFrame(void* renderer) {
-  static_cast<Renderer*>(renderer)->Loop();
-}
+void UpdateDrawFrame(void* renderer) { static_cast<App*>(renderer)->Loop(); }
 
 int main() {
   InitWindow(GameLogic::screenWidth, GameLogic::screenHeight, "Online Game");
 
-  Renderer renderer;
+  App renderer;
   renderer.Init();
 
 #ifdef PLATFORM_WEB

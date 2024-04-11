@@ -13,7 +13,7 @@
 #include <cstdlib>
 #include <vector>
 
-namespace Engine
+namespace Physics
 {
     /**
      * @class World
@@ -151,7 +151,7 @@ namespace Engine
          * @param colliderB The second collider.
          * @return True if there is a contact, false otherwise.
          */
-        static bool IsContact(const Engine::Collider& colliderA, const Engine::Collider& colliderB) noexcept;
+        static bool IsContact(const Physics::Collider& colliderA, const Physics::Collider& colliderB) noexcept;
 
         /**
          * @brief Resolves broad-phase collision detection and only detection using a QuadTree.

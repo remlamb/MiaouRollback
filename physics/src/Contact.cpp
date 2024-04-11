@@ -1,12 +1,12 @@
 #include "Contact.h"
 
-float Engine::Contact::CalculateSeparateVelocity() const noexcept
+float Physics::Contact::CalculateSeparateVelocity() const noexcept
 {
     const auto relativeVelocity = collidingBodies[0] . body -> Velocity() - collidingBodies[1] . body -> Velocity();
     return relativeVelocity . Dot(contactNormal);
 }
 
-void Engine::Contact::ResolveVelocity() const noexcept
+void Physics::Contact::ResolveVelocity() const noexcept
 {
     const auto separatingVelocity = CalculateSeparateVelocity();
     if (separatingVelocity > 0)
@@ -47,7 +47,7 @@ void Engine::Contact::ResolveVelocity() const noexcept
     }
 }
 
-void Engine::Contact::ResolveInterpenetration() const noexcept
+void Physics::Contact::ResolveInterpenetration() const noexcept
 {
     if (penetration <= 0)
     {
@@ -76,7 +76,7 @@ void Engine::Contact::ResolveInterpenetration() const noexcept
     }
 }
 
-void Engine::Contact::Resolve()
+void Physics::Contact::Resolve()
 {
     const auto delta = collidingBodies[0] . body -> Position() - collidingBodies[1] . body -> Position();
     switch (collidingBodies[0] . collider -> _shape)

@@ -12,6 +12,6 @@ class InputsManager {
  public:
   void SetPlayerInputs();
 
-  std::uint8_t playerInputs = 0;
-  std::uint32_t frame = 0;
+  std::uint8_t playerInput = 0;
+  int frame = 0;
 };

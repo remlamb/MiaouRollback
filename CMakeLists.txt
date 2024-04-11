@@ -84,8 +84,8 @@ if (EMSCRIPTEN)
 endif ()
 
 if (NOT EMSCRIPTEN)
-    add_executable(input_test main/input_test.cpp)
-    target_link_libraries(input_test PRIVATE game raylib imgui::imgui rl_imgui math common physics)
+    add_executable(network_input_test main/network_input_test.cpp)
+    target_link_libraries(network_input_test PRIVATE game raylib imgui::imgui rl_imgui math common physics)
 endif()
 
 # Copy all of the resource files to the destination
