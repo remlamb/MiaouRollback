@@ -93,7 +93,7 @@ file(GLOB_RECURSE GAME_SRC_FILES game/include/*.h game/src/*.cpp)
 add_library(game ${GAME_SRC_FILES})
 set_target_properties(game PROPERTIES LINKER_LANGUAGE CXX)
 target_include_directories(game PUBLIC game/include/)
-target_link_libraries(game PRIVATE raylib imgui::imgui rl_imgui math common physics)
+target_link_libraries(game PRIVATE raylib imgui::imgui rl_imgui math common physics photon)
 
 add_executable(main main/main.cpp)
 target_link_libraries(main PRIVATE raylib imgui::imgui rl_imgui math common physics game)
@@ -106,7 +106,11 @@ endif ()
 
 if (NOT EMSCRIPTEN)
     add_executable(network_input_test main/network_input_test.cpp)
-    target_link_libraries(network_input_test PRIVATE game raylib imgui::imgui rl_imgui math common physics photon)
+    target_link_libraries(network_input_test PRIVATE game raylib imgui::imgui rl_imgui math common physics)
+
+ add_executable(photonImplementation main/photonImplementation.cpp)
+    target_link_libraries(photonImplementation PRIVATE game raylib imgui::imgui rl_imgui math common physics photon)
+
 
 
 endif()
