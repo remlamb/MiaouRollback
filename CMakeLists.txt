@@ -22,6 +22,27 @@ if (USE_TRACY)
 endif()
 
 
+#Photon
+if (NOT EMSCRIPTEN)
+    # Create the photon library.
+    file(GLOB_RECURSE PHOTON_SRC_FILES libs/LoadBalancing-cpp/inc/*.h libs/LoadBalancing-cpp/src/*.cpp)
+    add_library(photon ${PHOTON_SRC_FILES})
+    set_target_properties(photon PROPERTIES LINKER_LANGUAGE CXX)
+    target_include_directories(photon PUBLIC libs)
+    #ReleaseVersion:
+    #   target_link_libraries(photon PUBLIC
+    #            ${CMAKE_CURRENT_SOURCE_DIR}/externals/photon/Common-cpp/lib/Common-cpp_vc17_release_windows_md_x64.lib
+    #            ${CMAKE_CURRENT_SOURCE_DIR}/externals/photon/Photon-cpp/lib/Photon-cpp_vc17_release_windows_md_x64.lib
+    #   )
+    #DebugVersion
+        target_link_libraries(photon PUBLIC
+                ${CMAKE_CURRENT_SOURCE_DIR}/libs/Common-cpp/lib/Common-cpp_vc17_debug_windows_md_x64.lib
+                ${CMAKE_CURRENT_SOURCE_DIR}/libs/Photon-cpp/lib/Photon-cpp_vc17_debug_windows_md_x64.lib
+        )
+endif()
+
+
+
 set(data_dir "${CMAKE_SOURCE_DIR}/data")
 
 set(data_files)
@@ -85,8 +106,13 @@ endif ()
 
 if (NOT EMSCRIPTEN)
     add_executable(network_input_test main/network_input_test.cpp)
-    target_link_libraries(network_input_test PRIVATE game raylib imgui::imgui rl_imgui math common physics)
+    target_link_libraries(network_input_test PRIVATE game raylib imgui::imgui rl_imgui math common physics photon)
+
+
 endif()
 
 # Copy all of the resource files to the destination
 file(COPY ${data_files} DESTINATION "data/")
+
+
+
