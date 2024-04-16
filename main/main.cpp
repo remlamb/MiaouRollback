@@ -66,9 +66,9 @@ class App {
       //    Vector2{game_logic.player.position.X, game_logic.player.position.Y},
       //    0.4f);
 
-      // DrawText("Coch-marre sample !!!", GameLogic::screenWidth / 2 - 200,
-      // 100,
-      //          30, WHITE);
+      //// DrawText("Coch-marre sample !!!", GameLogic::screenWidth / 2 - 200,
+      //// 100,
+      ////          30, WHITE);
     }
     EndDrawing();
 
