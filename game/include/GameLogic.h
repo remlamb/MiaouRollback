@@ -27,4 +27,5 @@ class GameLogic{
   void DeInit() noexcept;
 
   void ManageInput() noexcept;
+
 };

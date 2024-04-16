@@ -7,7 +7,7 @@
 void GameLogic::Init() noexcept {
   timer_.OnStart();
   world_.Init();
-
+  player.SetUp();
   // Border
   game::Collider border{&world_};
   border.CreateRectangleColliderObject({0, screenHeight - borderSize},
@@ -76,7 +76,7 @@ void GameLogic::Init() noexcept {
     Colliders.emplace_back(newColliderObj);
   }
 
-  player.SetUp();
+
 }
 
 void GameLogic::Update() noexcept {
@@ -88,7 +88,6 @@ void GameLogic::Update() noexcept {
   }
   player.Update();
   world_.Update(1 / 50.0f);
-  player.DrawDebug();
 }
 
 void GameLogic::DeInit() noexcept {
@@ -101,13 +100,28 @@ void GameLogic::DeInit() noexcept {
 void GameLogic::ManageInput() noexcept {
   inputs.SetPlayerInputs();
   if (inputs.playerInput & static_cast<std::uint8_t>(Input::kJump)) {
-    player.Jump();
+    player.Jump(0);
   }
   if (inputs.playerInput & static_cast<std::uint8_t>(Input::kLeft)) {
-    player.Move(false);
+    player.Move(false, 0);
   } else if (inputs.playerInput & static_cast<std::uint8_t>(Input::kRight)) {
-    player.Move(true);
+    player.Move(true, 0);
   } else {
-    player.Decelerate();
+    player.Decelerate(0);
   }
+
+
+  //Todo Remove Temporary for local
+  if (IsKeyDown(KEY_UP)) {
+    player.Jump(1);
+  }
+  if (IsKeyDown(KEY_LEFT)) {
+    player.Move(false, 1);
+  } else if (IsKeyDown(KEY_RIGHT)) {
+    player.Move(true, 1);
+  } else {
+    player.Decelerate(1);
+  }
+
 }
+

@@ -11,6 +11,6 @@ class ImageCustom {
 
   void Setup(const char* path, float scale, Pivot mode);
   void TearDown();
-  void Draw(Vector2 position);
+  void Draw(Vector2 position) const;
   void Draw(Vector2 position, float scale);
 };

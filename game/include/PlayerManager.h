@@ -28,12 +28,14 @@ class PlayerManager : public Physics::ContactListener {
   static constexpr float accelerationTime = 0.04f;
   static constexpr float decelerationTime = 0.1f;
 
-  std::array<Player, 1> players_;
-  std::array<Physics::BodyRef, 1> collidersBodyRefs;
-  std::array<int, 1> groundedColliderObjRefs_;
+  static constexpr int nbrPlayer = 2;
 
-  game::Collider colliderObj{world};
-  game::Collider groundedColliderObj{world};
+  std::array<Physics::BodyRef, nbrPlayer> playersBodyRefs;
+  std::array<Physics::ColliderRef, nbrPlayer> playersCollidersRefs;
+
+  std::array<Physics::BodyRef, nbrPlayer> playersGroundedBodyRefs;
+  std::array<Physics::ColliderRef, nbrPlayer> playersGroundedCollidersRefs;
+  std::array<int, nbrPlayer> TriggerNbrs;
 
  public:
   PlayerManager(Physics::World* world_);
@@ -41,9 +43,9 @@ class PlayerManager : public Physics::ContactListener {
   void SetUp();
   void Update();
 
-  void Jump();
-  void Move(bool rightDirection);
-  void Decelerate();
+  void Jump(int playerIdx);
+  void Move(bool rightDirection, int playerIdx);
+  void Decelerate(int playerIdx);
 
   void DrawDebug();
 
@@ -59,9 +61,5 @@ class PlayerManager : public Physics::ContactListener {
   // Private
   // Collider Mananger et -> en debug pour dessiner seulement
 
-  // playerCollider ref
-  // PlayerGrounCollider
-
-  Math::Vec2F position = {500, 50};  // in pixels
-  bool isGrounded = false;
+  std::array<Player, nbrPlayer> players_;
 };

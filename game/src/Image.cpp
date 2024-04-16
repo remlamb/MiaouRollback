@@ -8,7 +8,7 @@ void ImageCustom::Setup(const char* path, float scale, Pivot mode) {
 
 void ImageCustom::TearDown() { UnloadTexture(sprite); }
 
-void ImageCustom::Draw(Vector2 position) {
+void ImageCustom::Draw(Vector2 position) const {
   if (pivot == Pivot::Center) {
     position.x -= sprite.width * originalScale * 0.5f;
     position.y -= sprite.height * originalScale * 0.5f;
