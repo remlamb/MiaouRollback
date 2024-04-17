@@ -63,7 +63,7 @@ namespace ExitGames
 			// custom authentication
 			virtual void onCustomAuthenticationIntermediateStep(const Common::Dictionary<Common::JString, Common::Object>& /*customResponseData*/){}
 
-			// receive the available server regions during the connect workflow (if you have specified in the constructor, that you want to select a region)
+			// receive the available server regions during the Connect workflow (if you have specified in the constructor, that you want to select a region)
 			virtual void onAvailableRegions(const Common::JVector<Common::JString>& /*availableRegions*/, const Common::JVector<Common::JString>& /*availableRegionServers*/){}
 
 			virtual void onSecretReceival(const Common::JString& /*secret*/){}

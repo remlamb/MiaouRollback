@@ -6,10 +6,11 @@ PlayerManager::PlayerManager(Physics::World* world_) : world(world_) {}
 
 void PlayerManager::SetUp() {
   world->contactListener = this;
+  players_[0].position = Math::Vec2F(50, 650);
   players_[1].position = Math::Vec2F(550, 650);
   TriggerNbrs.fill(0);
   int it = 0;
-  for (auto player : players_) {
+  for (auto& player : players_) {
     Physics::BodyRef bodyRef = world->CreateBody();
     auto& newBody = world->GetBody(bodyRef);
     newBody.SetMass(1);
@@ -43,46 +44,27 @@ void PlayerManager::SetUp() {
         newBody.Position() -
         Math::Vec2F(groundedColliderDimension.X * 0.5f, groundedColliderPosY));
     groundedBody.SetVelocity(Math::Vec2F(0, 0));
-    groundedBody.type = Physics::BodyType::DYNAMIC;
+    groundedBody.type = Physics::BodyType::STATIC;
 
     playersGroundedBodyRefs[it] = groundedBodyRef;
 
     // Todo Must be in gameLogic
     Physics::ColliderRef colliderGroundedRef =
-        world->CreateCollider(groundedBodyRef);
+        world->CreateCollider(bodyRef);
     auto& groundedCollider = world->GetCollider(colliderGroundedRef);
     groundedCollider._shape = Math::ShapeType::Rectangle;
+    //groundedCollider._shape = Math::ShapeType::Circle;
     groundedCollider.isTrigger = true;
     groundedCollider.restitution = 0.0f;
     groundedCollider.rectangleShape.SetMinBound({0.0f, 0.0f});
     groundedCollider.rectangleShape.SetMaxBound(groundedColliderDimension);
-
+    //groundedCollider.circleShape.SetRadius(1.0f);
     playersGroundedCollidersRefs[it] = colliderGroundedRef;
     it++;
   }
 }
 
 void PlayerManager::Update() {
-  // TODO index du colliderObj au lieu du colliderObj
-  // colliderObj.UpdateCollider();
-  // groundedColliderObj.UpdateCollider();
-  // auto& body = world->GetBody(colliderObj.bodyRef);
-  // if (!isGrounded) {
-  //  body.AddForce({0, gravity});
-  //} else {
-  //  // for the rope
-  //  body.AddForce({0, ropeGravity});
-  //}
-  // isGrounded = groundedColliderObj.TriggerNbr > 1;
-
-  // auto& groundedCollider = world->GetBody(groundedColliderObj.bodyRef);
-  // groundedCollider.SetPosition(
-  //     body.Position() -
-  //     Math::Vec2F(groundedColliderDimension.X * 0.5f, groundedColliderPosY));
-
-  // position = body.Position();
-
-  // colliderObj.UpdateCollider();
   int it = 0;
   for (auto& player : players_) {
     auto& collider = world->GetCollider(playersCollidersRefs[it]);
@@ -101,21 +83,27 @@ void PlayerManager::Update() {
         break;
     }
 
+     //groundedColliderObj.UpdateCollider();
+    auto& groundedBody = world->GetBody(playersGroundedBodyRefs[it]);
+    groundedBody.SetPosition(
+        player.position -
+        Math::Vec2F(groundedColliderDimension.X * 0.5f, groundedColliderPosY));
+
     // groundedColliderObj.UpdateCollider();
     auto& groundedCollider =
         world->GetCollider(playersGroundedCollidersRefs[it]);
-    const auto groundedPosition =
-        world->GetBody(playersGroundedBodyRefs[it]).Position();
+    //const auto& groundedPosition =
+    //    world->GetBody(playersGroundedBodyRefs[it]).Position();
     switch (groundedCollider._shape) {
       case Math::ShapeType::Rectangle:
         groundedCollider.rectangleShape = Math::RectangleF(
-            groundedPosition, groundedPosition +
+            position, position +
                                   groundedCollider.rectangleShape.MaxBound() -
                                   groundedCollider.rectangleShape.MinBound());
         break;
       case Math::ShapeType::Circle:
         groundedCollider.circleShape = Math::CircleF(
-            groundedPosition, groundedCollider.circleShape.Radius());
+            position, groundedCollider.circleShape.Radius());
         break;
       default:
         break;
@@ -129,14 +117,9 @@ void PlayerManager::Update() {
       // for the rope
       body.AddForce({0, ropeGravity});
     }
+    players_[it].position = body.Position();
     // isGrounded = groundedColliderObj.TriggerNbr > 1;
 
-    auto& groundedBody = world->GetBody(playersGroundedBodyRefs[it]);
-    groundedBody.SetPosition(
-        body.Position() -
-        Math::Vec2F(groundedColliderDimension.X * 0.5f, groundedColliderPosY));
-
-    players_[it].position = body.Position();
     it++;
   }
 }
@@ -188,13 +171,14 @@ void PlayerManager::DrawDebug() {
     auto& body = world->GetBody(playersBodyRefs[it]);
     switch (curent_collider._shape) {
       case Math::ShapeType::Rectangle:
-        DrawRectangleLines(curent_collider.rectangleShape.MinBound().X,
-                           curent_collider.rectangleShape.MinBound().Y,
-                           curent_collider.rectangleShape.MaxBound().X -
-                               curent_collider.rectangleShape.MinBound().X,
-                           curent_collider.rectangleShape.MaxBound().Y -
-                               curent_collider.rectangleShape.MinBound().Y,
-                           PURPLE);
+        DrawRectangleLines(
+            body.Position().X + curent_collider.rectangleShape.MinBound().X,
+            body.Position().Y + curent_collider.rectangleShape.MinBound().Y,
+            curent_collider.rectangleShape.MaxBound().X -
+                curent_collider.rectangleShape.MinBound().X,
+            curent_collider.rectangleShape.MaxBound().Y -
+                curent_collider.rectangleShape.MinBound().Y,
+            PURPLE);
         break;
       case Math::ShapeType::Circle:
         DrawCircleLines(body.Position().X, body.Position().Y,
@@ -206,7 +190,7 @@ void PlayerManager::DrawDebug() {
 
     auto& curent_collider2 =
         world->GetCollider(playersGroundedCollidersRefs[it]);
-    auto& body2 = world->GetBody(playersGroundedBodyRefs[it]);
+    auto& body2 = world->GetBody(playersBodyRefs[it]);
     Color color = PURPLE;
     if (curent_collider2.isTrigger) {
       color = BLUE;
@@ -235,25 +219,16 @@ void PlayerManager::DrawDebug() {
 void PlayerManager::OnTriggerEnter(Physics::Collider colliderA,
                                    Physics::Collider colliderB) noexcept {
   int it = 0;
-  for (auto player : players_) {
-    auto& groundedCollider =
-        world->GetCollider(playersGroundedCollidersRefs[it]);
-    if (groundedCollider == colliderA || groundedCollider == colliderB) {
-      TriggerNbrs[it]++;
-    }
-    it++;
+  auto& groundedCollider = world->GetCollider(playersGroundedCollidersRefs[0]);
+  if (groundedCollider == colliderA || groundedCollider == colliderB) {
+    TriggerNbrs[0]++;
   }
 }
 void PlayerManager::OnTriggerExit(Physics::Collider colliderA,
                                   Physics::Collider colliderB) noexcept {
-  int it = 0;
-  for (auto player : players_) {
-    auto& groundedCollider =
-        world->GetCollider(playersGroundedCollidersRefs[it]);
-    if (groundedCollider == colliderA || groundedCollider == colliderB) {
-      TriggerNbrs[it]--;
-    }
-    it++;
+  auto& groundedCollider = world->GetCollider(playersGroundedCollidersRefs[0]);
+  if (groundedCollider == colliderA || groundedCollider == colliderB) {
+    TriggerNbrs[0]--;
   }
 }
 void PlayerManager::OnCollisionEnter(Physics::Collider colliderA,

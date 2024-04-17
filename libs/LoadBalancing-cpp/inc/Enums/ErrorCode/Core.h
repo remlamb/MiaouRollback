@@ -23,7 +23,7 @@ namespace ExitGames
 				static const int INVALID_REQUEST_PARAMETERS          =    -6;
 
 				// connection related error codes:
-				static const int NOT_READY                           =    -7; // The client tried to connect too early. The server is not ready yet.
+				static const int NOT_READY                           =    -7; // The client tried to Connect too early. The server is not ready yet.
 				static const int OVERLOAD                            =    -8; // The server is overloaded.
 				static const int BACKOFF                             =    -9; // The client has to wait for 10 seconds before the next try.
 				static const int MAINTENANCE                         =   -10; // The server is under Maintenance.

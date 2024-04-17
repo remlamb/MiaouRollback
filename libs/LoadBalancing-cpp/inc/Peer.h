@@ -24,7 +24,7 @@ namespace ExitGames
 			virtual ~Peer(void);
 
 #if defined EG_DOC
-			virtual void disconnect(void);
+			virtual void Disconnect(void);
 #endif
 			virtual bool opJoinLobby(const Common::JString& lobbyName=Common::JString(), nByte lobbyType=LobbyType::DEFAULT);
 			virtual bool opLeaveLobby(void);

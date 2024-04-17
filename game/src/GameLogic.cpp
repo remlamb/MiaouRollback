@@ -110,7 +110,6 @@ void GameLogic::ManageInput() noexcept {
     player.Decelerate(0);
   }
 
-
   //Todo Remove Temporary for local
   if (IsKeyDown(KEY_UP)) {
     player.Jump(1);

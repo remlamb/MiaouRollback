@@ -68,6 +68,15 @@ void game::Collider::RenderColliderObject() const noexcept {
                          curent_collider.rectangleShape.MaxBound().Y -
                              curent_collider.rectangleShape.MinBound().Y,
                          color);
+
+    //DrawRectangleLines(
+    //      body.Position().X + curent_collider.rectangleShape.MinBound().X,
+    //      body.Position().Y + curent_collider.rectangleShape.MinBound().Y,
+    //      curent_collider.rectangleShape.MaxBound().X -
+    //          curent_collider.rectangleShape.MinBound().X,
+    //      curent_collider.rectangleShape.MaxBound().Y -
+    //          curent_collider.rectangleShape.MinBound().Y,
+    //      color);
       break;
     case Math::ShapeType::Circle:
       DrawCircleLines(body.Position().X, body.Position().Y,

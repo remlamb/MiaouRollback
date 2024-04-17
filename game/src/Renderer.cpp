@@ -17,14 +17,14 @@ void Renderer::Init() noexcept {
 
 void Renderer::Draw() noexcept {
   customScale += 0.01f;
-  DrawBackground();
+  //DrawBackground();
   DrawColliderShape();
   img.Draw(
       Vector2{GameLogic::screenWidth * 0.8f, GameLogic::screenHeight * 0.5f});
 
-  DrawLimit();
-  DrawPlatforms();
-  DrawPlayer();
+  //DrawLimit();
+  //DrawPlatforms();
+  //DrawPlayer();
 }
 
 void Renderer::Deinit() noexcept {
