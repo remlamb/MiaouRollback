@@ -7,7 +7,7 @@
 #include "Timer.h"
 #include "World.h"
 
-class GameLogic{
+class GameLogic {
  public:
   Physics::World world_;
   Physics::Timer timer_;
@@ -19,6 +19,10 @@ class GameLogic{
   static constexpr int screenWidth = 1480;
   static constexpr int screenHeight = 720;
 
+	//Todo Add ID when creating platform rope etc... 
+  static constexpr int platformColliderID = 10;
+  static constexpr int ropeColliderID = 11;
+
   const float borderSize = 20.0f;
   const Math::Vec2F platformSize{200.0f, 40.0f};
 
@@ -27,5 +31,4 @@ class GameLogic{
   void DeInit() noexcept;
 
   void ManageInput() noexcept;
-
 };

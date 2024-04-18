@@ -27,6 +27,7 @@ void PlayerManager::SetUp() {
     newCollider.isTrigger = false;
     newCollider.restitution = 0.0f;
     newCollider.circleShape.SetRadius(ColliderRadius);
+    newCollider.ID = ColliderID++;
 
     playersCollidersRefs[it] = colliderRef;
 
@@ -50,15 +51,16 @@ void PlayerManager::SetUp() {
 
     // Todo Must be in gameLogic
     Physics::ColliderRef colliderGroundedRef =
-        world->CreateCollider(bodyRef);
+        world->CreateCollider(playersGroundedBodyRefs[it]);
     auto& groundedCollider = world->GetCollider(colliderGroundedRef);
     groundedCollider._shape = Math::ShapeType::Rectangle;
-    //groundedCollider._shape = Math::ShapeType::Circle;
+    // groundedCollider._shape = Math::ShapeType::Circle;
     groundedCollider.isTrigger = true;
+    groundedCollider.ID = ColliderID++;
     groundedCollider.restitution = 0.0f;
     groundedCollider.rectangleShape.SetMinBound({0.0f, 0.0f});
     groundedCollider.rectangleShape.SetMaxBound(groundedColliderDimension);
-    //groundedCollider.circleShape.SetRadius(1.0f);
+    // groundedCollider.circleShape.SetRadius(1.0f);
     playersGroundedCollidersRefs[it] = colliderGroundedRef;
     it++;
   }
@@ -83,7 +85,9 @@ void PlayerManager::Update() {
         break;
     }
 
-     //groundedColliderObj.UpdateCollider();
+    auto& body = world->GetBody(playersBodyRefs[it]);
+    players_[it].position = body.Position();
+    // groundedColliderObj.UpdateCollider();
     auto& groundedBody = world->GetBody(playersGroundedBodyRefs[it]);
     groundedBody.SetPosition(
         player.position -
@@ -92,32 +96,31 @@ void PlayerManager::Update() {
     // groundedColliderObj.UpdateCollider();
     auto& groundedCollider =
         world->GetCollider(playersGroundedCollidersRefs[it]);
-    //const auto& groundedPosition =
-    //    world->GetBody(playersGroundedBodyRefs[it]).Position();
+    const auto& groundedPosition =
+        world->GetBody(playersGroundedBodyRefs[it]).Position();
     switch (groundedCollider._shape) {
       case Math::ShapeType::Rectangle:
         groundedCollider.rectangleShape = Math::RectangleF(
-            position, position +
+            groundedPosition, groundedPosition +
                                   groundedCollider.rectangleShape.MaxBound() -
                                   groundedCollider.rectangleShape.MinBound());
         break;
       case Math::ShapeType::Circle:
-        groundedCollider.circleShape = Math::CircleF(
-            position, groundedCollider.circleShape.Radius());
+        groundedCollider.circleShape =
+            Math::CircleF(position, groundedCollider.circleShape.Radius());
         break;
       default:
         break;
     }
 
-    auto& body = world->GetBody(playersBodyRefs[it]);
-    player.isGrounded = TriggerNbrs[it] > 3;
+    player.isGrounded = TriggerNbrs[it] > 1;
     if (!player.isGrounded) {
       body.AddForce({0, gravity});
     } else {
       // for the rope
       body.AddForce({0, ropeGravity});
     }
-    players_[it].position = body.Position();
+
     // isGrounded = groundedColliderObj.TriggerNbr > 1;
 
     it++;
@@ -125,11 +128,6 @@ void PlayerManager::Update() {
 }
 
 void PlayerManager::Jump(int playerIdx) {
-  // auto& body = world->GetBody(colliderObj.bodyRef);
-  // if (isGrounded) {
-  //   body.SetVelocity({body.Velocity().X, jumpVelocity});
-  // }
-
   auto& body = world->GetBody(playersBodyRefs[playerIdx]);
   // std::cout << players_[playerIdx].isGrounded << std::endl;
   std::cout << TriggerNbrs[playerIdx] << std::endl;
@@ -138,12 +136,6 @@ void PlayerManager::Jump(int playerIdx) {
   }
 }
 void PlayerManager::Move(bool rightDirection, int playerIdx) {
-  // auto& body = world->GetBody(colliderObj.bodyRef);
-  // float targetVelocityX = rightDirection ? moveVelocity : -moveVelocity;
-  // body.SetVelocity(Math::Vec2F::Lerp(
-  //     body.Velocity(), {targetVelocityX, body.Velocity().Y},
-  //     accelerationTime));
-
   auto& body = world->GetBody(playersBodyRefs[playerIdx]);
   float targetVelocityX = rightDirection ? moveVelocity : -moveVelocity;
   body.SetVelocity(Math::Vec2F::Lerp(
@@ -151,11 +143,6 @@ void PlayerManager::Move(bool rightDirection, int playerIdx) {
 }
 
 void PlayerManager::Decelerate(int playerIdx) {
-  // auto& body = world->GetBody(colliderObj.bodyRef);
-  // const Math::Vec2F zeroVelocity = {0.0f, body.Velocity().Y};
-  // body.SetVelocity(
-  //     Math::Vec2F::Lerp(body.Velocity(), zeroVelocity, decelerationTime));
-
   auto& body = world->GetBody(playersBodyRefs[playerIdx]);
   const Math::Vec2F zeroVelocity = {0.0f, body.Velocity().Y};
   body.SetVelocity(
@@ -218,17 +205,26 @@ void PlayerManager::DrawDebug() {
 
 void PlayerManager::OnTriggerEnter(Physics::Collider colliderA,
                                    Physics::Collider colliderB) noexcept {
-  int it = 0;
-  auto& groundedCollider = world->GetCollider(playersGroundedCollidersRefs[0]);
-  if (groundedCollider == colliderA || groundedCollider == colliderB) {
-    TriggerNbrs[0]++;
+  if (colliderA == world->GetCollider(playersGroundedCollidersRefs[0]) ||
+      colliderB == world->GetCollider(playersGroundedCollidersRefs[0])) {
+      TriggerNbrs[0]++;
+  }
+
+  if (colliderA == world->GetCollider(playersGroundedCollidersRefs[1]) ||
+      colliderB == world->GetCollider(playersGroundedCollidersRefs[1])) {
+      TriggerNbrs[1]++;
   }
 }
 void PlayerManager::OnTriggerExit(Physics::Collider colliderA,
                                   Physics::Collider colliderB) noexcept {
-  auto& groundedCollider = world->GetCollider(playersGroundedCollidersRefs[0]);
-  if (groundedCollider == colliderA || groundedCollider == colliderB) {
-    TriggerNbrs[0]--;
+  if (colliderA == world->GetCollider(playersGroundedCollidersRefs[0]) ||
+      colliderB == world->GetCollider(playersGroundedCollidersRefs[0])) {
+      TriggerNbrs[0]--;
+  }
+
+  if (colliderA == world->GetCollider(playersGroundedCollidersRefs[1]) ||
+      colliderB == world->GetCollider(playersGroundedCollidersRefs[1])) {
+      TriggerNbrs[1]--;
   }
 }
 void PlayerManager::OnCollisionEnter(Physics::Collider colliderA,

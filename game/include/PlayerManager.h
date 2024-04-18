@@ -29,6 +29,7 @@ class PlayerManager : public Physics::ContactListener {
   static constexpr float decelerationTime = 0.1f;
 
   static constexpr int nbrPlayer = 2;
+    
 
   std::array<Physics::BodyRef, nbrPlayer> playersBodyRefs;
   std::array<Physics::ColliderRef, nbrPlayer> playersCollidersRefs;
@@ -36,6 +37,8 @@ class PlayerManager : public Physics::ContactListener {
   std::array<Physics::BodyRef, nbrPlayer> playersGroundedBodyRefs;
   std::array<Physics::ColliderRef, nbrPlayer> playersGroundedCollidersRefs;
   std::array<int, nbrPlayer> TriggerNbrs;
+  int ColliderID = 0;
+
 
  public:
   PlayerManager(Physics::World* world_);
