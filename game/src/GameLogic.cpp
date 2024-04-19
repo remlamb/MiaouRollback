@@ -4,123 +4,188 @@
 
 #include "Random.h"
 
-void GameLogic::Init() noexcept {
-  timer_.OnStart();
-  world_.Init();
-  player.SetUp();
-  // Border
-  game::Collider border{&world_};
-  border.CreateRectangleColliderObject({0, screenHeight - borderSize},
-                                       {0.0, 0.0}, {screenWidth, borderSize}, 1,
-                                       false, Physics::BodyType::STATIC);
-  Colliders.emplace_back(border);
+namespace game
+{
+	void GameLogic::Init() noexcept {
+		timer_.OnStart();
+		world_.Init();
+		player.SetUp();
 
-  game::Collider border2{&world_};
-  game::Collider border3{&world_};
-  game::Collider border4{&world_};
-  border2.CreateRectangleColliderObject({screenWidth - borderSize, 0},
-                                        {0.0, 0.0}, {borderSize, screenHeight},
-                                        1, false, Physics::BodyType::STATIC);
-  border3.CreateRectangleColliderObject({0, 0}, {0.0, 0.0},
-                                        {screenWidth, borderSize}, 1, false,
-                                        Physics::BodyType::STATIC);
-  border4.CreateRectangleColliderObject({0, 0}, {0.0, 0.0},
-                                        {borderSize, screenHeight}, 1, false,
-                                        Physics::BodyType::STATIC);
-  Colliders.emplace_back(border2);
-  Colliders.emplace_back(border3);
-  Colliders.emplace_back(border4);
+		//// Border
+		CreatePlatform({ 0, 0 }, { 0.0, 0.0 }, { screenWidth, border_size_ });
+		CreatePlatform({ 0, 0 }, { 0.0, 0.0 }, { border_size_, screenHeight });
+		CreatePlatform({ 0, screenHeight - border_size_ }, { 0,0 }, { screenWidth, border_size_ });
+		CreatePlatform({ screenWidth - border_size_, 0 }, { 0,0 }, { border_size_, screenHeight });
 
-  game::Collider platform{&world_};
-  game::Collider platform1{&world_};
-  game::Collider platform2{&world_};
-  // Platform
-  platform.CreateRectangleColliderObject(
-      {250 - static_cast<float>(platformSize.X * 0.5), screenHeight - 150},
-      {0.0, 0.0}, platformSize, 1, false, Physics::BodyType::STATIC);
-  platform2.CreateRectangleColliderObject(
-      {screenWidth - 250 - static_cast<float>(platformSize.X * 0.5),
-       screenHeight - 150},
-      {0.0, 0.0}, platformSize, 1, false, Physics::BodyType::STATIC);
-  platform1.CreateRectangleColliderObject(
-      {static_cast<float>(screenWidth * 0.5) -
-           static_cast<float>(platformSize.X * 0.5),
-       screenHeight - 300},
-      {0.0, 0.0}, platformSize, 1, false, Physics::BodyType::STATIC);
-  Colliders.emplace_back(platform);
-  Colliders.emplace_back(platform1);
-  Colliders.emplace_back(platform2);
+		////Platform
+		CreatePlatform({ 250 - static_cast<float>(platform_size_.X * 0.5), screenHeight - 150 }, { 0.0, 0.0 }, { platform_size_ });
+		CreatePlatform({ screenWidth - 250 - static_cast<float>(platform_size_.X * 0.5),screenHeight - 150 }, { 0.0, 0.0 }, { platform_size_ });
+		CreatePlatform({ static_cast<float>(screenWidth * 0.5) - static_cast<float>(platform_size_.X * 0.5),static_cast<float>(platform_size_.X * 0.5) + screenHeight * 0.5f }, { 0,0 }, { platform_size_ });
 
-  // Rope
-  game::Collider rope{&world_};
-  game::Collider rope1{&world_};
-  rope.CreateRectangleColliderObject(
-      {450 - static_cast<float>(20.0f * 0.5), screenHeight - 650}, {0.0, 0.0},
-      {20.0f, 250.0f}, 1, true, Physics::BodyType::STATIC);
+		//// Rope
+		CreateRope({ 450 - static_cast<float>(20.0f * 0.5), screenHeight - 650 }, { 0.0, 0.0 }, { 20.0f, 250.0f });
+		CreateRope({ screenWidth - 450 - static_cast<float>(20.0f * 0.5), screenHeight - 650 }, { 0.0, 0.0 }, { 20.0f, 250.0f });
+	}
 
-  rope1.CreateRectangleColliderObject(
-      {screenWidth - 450 - static_cast<float>(20.0f * 0.5), screenHeight - 650},
-      {0.0, 0.0}, {20.0f, 250.0f}, 1, true, Physics::BodyType::STATIC);
-  Colliders.emplace_back(rope);
-  Colliders.emplace_back(rope1);
+	void GameLogic::Update() noexcept {
+		// PlayerManager Input
+		ManageInput();
+		UpdateCollider();
 
-  for (int i = 0; i < 3; i++) {
-    game::Collider newColliderObj{&world_};
-    newColliderObj.CreateCircleColliderObject(
-        {250 + static_cast<float>(i * 2), 650 + static_cast<float>(i * 2.5)},
-        20.0f, 100, false, Physics::BodyType::DYNAMIC);
-    auto& ccollider = world_.GetCollider(newColliderObj.colliderRef);
-    auto& cbody = world_.GetBody(newColliderObj.bodyRef);
-    cbody.SetVelocity(Math::Vec2F(80.0f, 120.0f));
-    ccollider.restitution = 0.0f;
-    Colliders.emplace_back(newColliderObj);
-  }
+		player.Update();
+		world_.Update(1 / 50.0f);
+	}
+
+	void GameLogic::DeInit() noexcept {
+		world_.Clear();
+
+		world_.contactListener = nullptr;
+		colliders_.empty();
+	}
+
+	void GameLogic::ManageInput() noexcept {
+		inputs.SetPlayerInputs();
+		if (inputs.playerInput & static_cast<std::uint8_t>(Input::kJump)) {
+			player.Jump(0);
+		}
+		if (inputs.playerInput & static_cast<std::uint8_t>(Input::kLeft)) {
+			player.Move(false, 0);
+		}
+		else if (inputs.playerInput & static_cast<std::uint8_t>(Input::kRight)) {
+			player.Move(true, 0);
+		}
+		else {
+			player.Decelerate(0);
+		}
+
+		//Todo Remove Temporary for local
+		if (IsKeyDown(KEY_UP)) {
+			player.Jump(1);
+		}
+		if (IsKeyDown(KEY_LEFT)) {
+			player.Move(false, 1);
+		}
+		else if (IsKeyDown(KEY_RIGHT)) {
+			player.Move(true, 1);
+		}
+		else {
+			player.Decelerate(1);
+		}
+
+	}
+
+	void GameLogic::CreatePlatform(Math::Vec2F position, Math::Vec2F rectMinBound,
+		Math::Vec2F rectMaxBound) noexcept
+	{
+		Physics::BodyRef bodyRef = world_.CreateBody();
+		auto& newBody = world_.GetBody(bodyRef);
+		newBody.SetMass(1);
+		newBody.SetPosition(position);
+		newBody.SetVelocity(Math::Vec2F(0, 0));
+		newBody.type = Physics::BodyType::STATIC;
+
+		Physics::ColliderRef colliderRef = world_.CreateCollider(bodyRef);
+		auto& newCollider = world_.GetCollider(colliderRef);
+		newCollider._shape = Math::ShapeType::Rectangle;
+		newCollider.isTrigger = false;
+		newCollider.restitution = 0.0f;
+		newCollider.rectangleShape.SetMinBound(rectMinBound);
+		newCollider.rectangleShape.SetMaxBound(rectMaxBound);
+		newCollider.ID = platform_collider_id_;
+		colliders_.emplace_back(collider{ bodyRef, colliderRef });
+	}
+
+	void GameLogic::CreateRope(Math::Vec2F position, Math::Vec2F rectMinBound,
+		Math::Vec2F rectMaxBound) noexcept
+	{
+		Physics::BodyRef bodyRef = world_.CreateBody();
+		auto& newBody = world_.GetBody(bodyRef);
+		newBody.SetMass(1);
+		newBody.SetPosition(position);
+		newBody.SetVelocity(Math::Vec2F(0, 0));
+		newBody.type = Physics::BodyType::STATIC;
+
+		Physics::ColliderRef colliderRef = world_.CreateCollider(bodyRef);
+		auto& newCollider = world_.GetCollider(colliderRef);
+		newCollider._shape = Math::ShapeType::Rectangle;
+		newCollider.isTrigger = true;
+		newCollider.restitution = 0.0f;
+		newCollider.rectangleShape.SetMinBound(rectMinBound);
+		newCollider.rectangleShape.SetMaxBound(rectMaxBound);
+		newCollider.ID = rope_collider_id_;
+		colliders_.emplace_back(collider{ bodyRef, colliderRef });
+	}
 
 
-}
+	void GameLogic::UpdateCollider() noexcept {
+		for (auto& collider : colliders_)
+		{
+			auto& physicsCollider = world_.GetCollider(collider.colliderRef);
+			auto& physicsBody = world_.GetBody(collider.bodyRef);
+			switch (physicsCollider._shape) {
+			case Math::ShapeType::Rectangle:
+				physicsCollider.rectangleShape = Math::RectangleF(
+					physicsBody.Position(), physicsBody.Position() + physicsCollider.rectangleShape.MaxBound() -
+					physicsCollider.rectangleShape.MinBound());
+				break;
+			case Math::ShapeType::Circle:
+				physicsCollider.circleShape =
+					Math::CircleF(physicsBody.Position(), physicsCollider.circleShape.Radius());
+				break;
+			default:
+				break;
+			}
+		}
+	}
 
-void GameLogic::Update() noexcept {
-  // PlayerManager Input
-  ManageInput();
 
-  for (auto& colliderObj : Colliders) {
-    colliderObj.UpdateCollider();
-  }
-  player.Update();
-  world_.Update(1 / 50.0f);
-}
+	void GameLogic::RenderColliderObject() noexcept {
+		for (auto& collider : colliders_)
+		{
+			auto physicsCollider = world_.GetCollider(collider.colliderRef);
+			auto body = world_.GetBody(collider.bodyRef);
 
-void GameLogic::DeInit() noexcept {
-  world_.Clear();
+			Color color = WHITE;
+			switch (body.type) {
+			case Physics::BodyType::DYNAMIC:
+				if (physicsCollider.isTrigger) {
+					color = BLUE;
+				}
+				else {
+					color = RED;
+				}
+				break;
+			case Physics::BodyType::STATIC:
+				if (physicsCollider.isTrigger) {
+					color = ORANGE;
+				}
+				else {
+					color = YELLOW;
+				}
+				break;
+			default:
+				break;
+			}
 
-  world_.contactListener = nullptr;
-  Colliders.empty();
-}
+			switch (physicsCollider._shape) {
+			case Math::ShapeType::Rectangle:
+				DrawRectangleLines(physicsCollider.rectangleShape.MinBound().X,
+					physicsCollider.rectangleShape.MinBound().Y,
+					physicsCollider.rectangleShape.MaxBound().X -
+					physicsCollider.rectangleShape.MinBound().X,
+					physicsCollider.rectangleShape.MaxBound().Y -
+					physicsCollider.rectangleShape.MinBound().Y,
+					color);
 
-void GameLogic::ManageInput() noexcept {
-  inputs.SetPlayerInputs();
-  if (inputs.playerInput & static_cast<std::uint8_t>(Input::kJump)) {
-    player.Jump(0);
-  }
-  if (inputs.playerInput & static_cast<std::uint8_t>(Input::kLeft)) {
-    player.Move(false, 0);
-  } else if (inputs.playerInput & static_cast<std::uint8_t>(Input::kRight)) {
-    player.Move(true, 0);
-  } else {
-    player.Decelerate(0);
-  }
-
-  //Todo Remove Temporary for local
-  if (IsKeyDown(KEY_UP)) {
-    player.Jump(1);
-  }
-  if (IsKeyDown(KEY_LEFT)) {
-    player.Move(false, 1);
-  } else if (IsKeyDown(KEY_RIGHT)) {
-    player.Move(true, 1);
-  } else {
-    player.Decelerate(1);
-  }
-
+				break;
+			case Math::ShapeType::Circle:
+				DrawCircleLines(body.Position().X, body.Position().Y,
+					physicsCollider.circleShape.Radius(), color);
+				break;
+			default:
+				break;
+			}
+		}
+	}
 }
 

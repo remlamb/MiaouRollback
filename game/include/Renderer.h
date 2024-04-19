@@ -4,7 +4,7 @@
 
 class Renderer {
  public:
-  Renderer(GameLogic* gl) : game_logic(gl) {}
+  Renderer(game::GameLogic* gl) : game_logic(gl) {}
   void Init() noexcept;
   void Draw() noexcept;
   void Deinit() noexcept;
@@ -16,7 +16,7 @@ class Renderer {
   void DrawBackground() noexcept;
   void DrawLimit() noexcept;
 
-  GameLogic* game_logic = nullptr;
+  game::GameLogic* game_logic = nullptr;
 
   ImageCustom img;
   ImageCustom player;
@@ -30,6 +30,7 @@ class Renderer {
   ImageCustom borderTop;
   Image icon;
   float customScale = 0.0f;
-  Vector2 center = {GameLogic::screenWidth * 0.5f,
-                    GameLogic::screenHeight * 0.5f};
+  Vector2 center = {
+	  game::GameLogic::screenWidth * 0.5f,
+	  game::GameLogic::screenHeight * 0.5f};
 };

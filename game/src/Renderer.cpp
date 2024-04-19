@@ -20,7 +20,7 @@ void Renderer::Draw() noexcept {
   //DrawBackground();
   DrawColliderShape();
   img.Draw(
-      Vector2{GameLogic::screenWidth * 0.8f, GameLogic::screenHeight * 0.5f});
+      Vector2{game::GameLogic::screenWidth * 0.8f, game::GameLogic::screenHeight * 0.5f});
 
   //DrawLimit();
   //DrawPlatforms();
@@ -36,25 +36,23 @@ void Renderer::Deinit() noexcept {
 
 void Renderer::DrawColliderShape() noexcept
 {
-  for (auto collider : game_logic->Colliders) {
-    collider.RenderColliderObject();
-  }
+  game_logic->RenderColliderObject();
   game_logic->player.DrawDebug();
 }
 
 void Renderer::DrawPlatforms() noexcept {
-  platform.Draw(Vector2{250, GameLogic::screenHeight - 130}, 1.4f);
+  platform.Draw(Vector2{250, game::GameLogic::screenHeight - 130}, 1.4f);
   platform.Draw(
-      Vector2{GameLogic::screenWidth - 250, GameLogic::screenHeight - 130},
+      Vector2{game::GameLogic::screenWidth - 250, game::GameLogic::screenHeight - 130},
       1.4f);
   platform.Draw(
-      Vector2{GameLogic::screenWidth * 0.5, GameLogic::screenHeight - 280},
+      Vector2{game::GameLogic::screenWidth * 0.5, game::GameLogic::screenHeight - 280},
       1.4f);
 }
 
 void Renderer::DrawPlayer() noexcept {
-  Vector2 playerPosition = Vector2{game_logic->player.players_[0].position.X,
-                                   game_logic->player.players_[0].position.Y};
+  Vector2 playerPosition = Vector2{game_logic->player.players[0].position.X,
+                                   game_logic->player.players[0].position.Y};
 
   playerWeapon.Draw(playerPosition, 0.2f);
   player.Draw(playerPosition, 0.4f);
@@ -63,8 +61,8 @@ void Renderer::DrawPlayer() noexcept {
 void Renderer::DrawBackground() noexcept { background.Draw(center); }
 
 void Renderer::DrawLimit() noexcept {
-  borderBottom.Draw(Vector2{0, GameLogic::screenHeight - 20});
+  borderBottom.Draw(Vector2{0, game::GameLogic::screenHeight - 20});
   borderLeft.Draw(Vector2{0 - 50, 0});
-  borderRight.Draw(Vector2{GameLogic::screenWidth - 20, 0});
+  borderRight.Draw(Vector2{game::GameLogic::screenWidth - 20, 0});
   borderTop.Draw(Vector2{0, 0 - 50});
 }
