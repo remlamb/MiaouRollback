@@ -12,25 +12,27 @@ class Renderer {
  private:
   void DrawColliderShape() noexcept;
   void DrawPlatforms() noexcept;
+  void DrawRopes() noexcept;
   void DrawPlayer() noexcept;
   void DrawBackground() noexcept;
   void DrawLimit() noexcept;
 
   game::GameLogic* game_logic = nullptr;
 
-  ImageCustom img;
   ImageCustom player;
+  ImageCustom player2;
   ImageCustom playerWeapon;
   ImageCustom background;
   ImageCustom platform;
+  ImageCustom rope;
 
   ImageCustom borderBottom;
   ImageCustom borderLeft;
   ImageCustom borderRight;
   ImageCustom borderTop;
-  Image icon;
+  raylib::Image icon;
   float customScale = 0.0f;
-  Vector2 center = {
+  raylib::Vector2 center = {
 	  game::GameLogic::screenWidth * 0.5f,
 	  game::GameLogic::screenHeight * 0.5f};
 };

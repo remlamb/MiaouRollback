@@ -6,12 +6,14 @@
 #include <LoadBalancing-cpp/inc/Client.h>
 #include <LoadBalancing-cpp/inc/Listener.h>
 
+#include "GameLogic.h"
 
 
 class NetworkLogic : private ExitGames::LoadBalancing::Listener {
  public:
+  bool is_connected = false;
   NetworkLogic(const ExitGames::Common::JString& appID,
-               const ExitGames::Common::JString& appVersion);
+               const ExitGames::Common::JString& appVersion, game::GameLogic* game_logic);
   void Connect();
   void Disconnect();
   void Run();
@@ -35,6 +37,7 @@ class NetworkLogic : private ExitGames::LoadBalancing::Listener {
  private:
   ExitGames::LoadBalancing::Client mLoadBalancingClient;
   ExitGames::Common::Logger mLogger;  // accessed by EGLOG()
+  game::GameLogic* game_logic_;
 
   void debugReturn(int debugLevel,
                    const ExitGames::Common::JString& string) override;
@@ -58,4 +61,5 @@ class NetworkLogic : private ExitGames::LoadBalancing::Listener {
 
   void leaveRoomReturn(int errorCode,
                        const ExitGames::Common::JString& errorString) override;
+
 };

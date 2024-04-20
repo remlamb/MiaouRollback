@@ -1,5 +1,4 @@
-﻿#include <raylib.h>
-#ifdef PLATFORM_WEB
+﻿#ifdef PLATFORM_WEB
 #include <emscripten/emscripten.h>
 #else
 #endif

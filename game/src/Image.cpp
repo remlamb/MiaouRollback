@@ -1,5 +1,6 @@
 #include "Image.h"
 
+using namespace raylib;
 void ImageCustom::Setup(const char* path, float scale, Pivot mode) {
   sprite = LoadTexture(path);
   originalScale = scale;

@@ -1,5 +1,7 @@
 #pragma once
 #include <cstdint>
+#include "raylib_wrapper.h"
+using namespace raylib;
 
 namespace Input {
 constexpr std::uint8_t kJump = 1 << 0;

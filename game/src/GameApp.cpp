@@ -1,13 +1,22 @@
-#include "PhotonApp.h"
-
-#include <imgui.h>
+#include "GameApp.h"
 
 #include "imgui_impl_raylib.h"
-#include "raylib_wrapper.h"
 
-void PhotonApp::Setup() noexcept {
-  raylib::InitWindow(1080, 720, "Photon App");
+void GameApp::Init() {
+  raylib::InitWindow(game::GameLogic::screenWidth,
+                     game::GameLogic::screenHeight, "Online Game");
 
+  raylib::InitAudioDevice();
+  game_renderer->Init();
+  sound = raylib::LoadSound("data/walkman.wav");
+  music = raylib::LoadMusicStream("data/music.wav");
+  music.looping = true;
+
+  PlayMusicStream(music);
+
+  game_logic->Init();
+
+  // Photon
   ImGui::CreateContext();
   ImGuiIO& io = ImGui::GetIO();
   (void)io;
@@ -19,19 +28,29 @@ void PhotonApp::Setup() noexcept {
   ImGui::StyleColorsClassic();
 }
 
-void PhotonApp::Update() noexcept {
+void GameApp::Deinit() {
+  game_renderer->Deinit();
+  UnloadSound(sound);  // Unload sound
+  UnloadMusicStream(music);
+  raylib::CloseAudioDevice();
+  raylib::CloseWindow();
+
+  game_logic->DeInit();
+}
+
+void GameApp::Loop(void) {
+  game_logic->Update();
   networkLogic_.Run();
+
   ImGui_ImplRaylib_ProcessEvents();
-}
 
-void PhotonApp::Draw() noexcept {
-  // raylib::DrawRectangle(700, 500, 100, 100, raylib::Color{ 255, 0, 0, 255 });
+  UpdateMusicStream(music);
+  raylib::BeginDrawing();
+  {
+    raylib::ClearBackground(raylib::BLACK);
+    game_renderer->Draw();
+  }
 
-  // raylib::DrawRaylibText("Raylib drawing text with photon in the same app.",
-  //     400, 350, 30, raylib::kWhite);
-}
-
-void PhotonApp::DrawImGui() noexcept {
   ImGui_ImplRaylib_NewFrame();
   ImGui::NewFrame();
 
@@ -58,12 +77,6 @@ void PhotonApp::DrawImGui() noexcept {
   ImGui::End();
   ImGui::Render();
   ImGui_ImplRaylib_RenderDrawData(ImGui::GetDrawData());
-}
 
-void PhotonApp::TearDown() noexcept {
-  networkLogic_.Disconnect();
-  raylib::CloseWindow();
-
-  ImGui_ImplRaylib_Shutdown();
-  ImGui::DestroyContext();
+  raylib::EndDrawing();
 }

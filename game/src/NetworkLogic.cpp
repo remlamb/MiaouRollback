@@ -28,6 +28,12 @@ void NetworkLogic::joinRoomEventAction(
   std::cout << "Room state: player nr: " << playerNr
             << " player nrs size: " << playernrs.getSize() << " player userID: "
             << player.getUserID().UTF8Representation().cstr() << '\n';
+
+	//If currentClientPlayer is not set
+  if (game_logic_->currentClientPlayer == -1)
+  {
+    game_logic_->currentClientPlayer = playerNr - 1;
+  }
 }
 
 void NetworkLogic::leaveRoomEventAction(int playerNr, bool isInactive) {
@@ -37,10 +43,8 @@ void NetworkLogic::leaveRoomEventAction(int playerNr, bool isInactive) {
 
 void NetworkLogic::customEventAction(
     int playerNr, nByte eventCode,
-    const ExitGames::Common::Object& eventContent)
-{
-
-      if (eventContent.getType() != ExitGames::Common::TypeCode::HASHTABLE) {
+    const ExitGames::Common::Object& eventContent) {
+  if (eventContent.getType() != ExitGames::Common::TypeCode::HASHTABLE) {
     std::cerr << "Unsupported event content type \n";
     return;
   }
@@ -73,13 +77,19 @@ void NetworkLogic::leaveRoomReturn(
 }
 
 NetworkLogic::NetworkLogic(const ExitGames::Common::JString& appID,
-                           const ExitGames::Common::JString& appVersion)
-    : mLoadBalancingClient(*this, appID, appVersion) {}
+                           const ExitGames::Common::JString& appVersion,
+                           game::GameLogic* game_logic)
+    : mLoadBalancingClient(*this, appID, appVersion) {
+  game_logic_ = game_logic;
+}
 
 void NetworkLogic::Connect() {
   std::cout << "hello\n";
   if (!mLoadBalancingClient.connect())
     EGLOG(ExitGames::Common::DebugLevel::ERRORS, L"Could not connect.");
+  else {
+    is_connected = true;
+  }
 }
 
 void NetworkLogic::Run() { mLoadBalancingClient.service(); }
@@ -113,7 +123,7 @@ void NetworkLogic::RaiseEvent(
     bool reliable, EventCode event_code,
     const ExitGames::Common::Hashtable& event_data) noexcept {
   if (!mLoadBalancingClient.opRaiseEvent(reliable, event_data,
-                                           static_cast<nByte>(event_code))) {
+                                         static_cast<nByte>(event_code))) {
     EGLOG(ExitGames::Common::DebugLevel::ERRORS, L"Could not raise event.");
   }
 }

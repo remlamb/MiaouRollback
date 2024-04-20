@@ -1,7 +1,5 @@
 #include "InputsManager.h"
 
-#include <raylib.h>
-
 void InputsManager::SetPlayerInputs() {
   playerInput = 0;
   if (IsKeyDown(KEY_SPACE) ||

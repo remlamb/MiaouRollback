@@ -1,6 +1,8 @@
 #pragma once
 #include "World.h"
-#include <raylib.h>
+//#include <raylib.h>
+#include "raylib_wrapper.h"
+using namespace raylib;
 
 /**
  * @brief Represents the Player position, and event that must be shared with other client.
