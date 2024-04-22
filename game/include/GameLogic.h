@@ -7,6 +7,14 @@
 using namespace raylib;
 
 namespace game {
+    enum class GameState
+    {
+        LogMenu,
+        GameLaunch
+    };
+
+
+
 /**
  * @brief Represents a link between a physics object and its collider.
  * The collider struct consists of two members:
@@ -36,6 +44,8 @@ class GameLogic {
   PlayerManager player{&world_};
   InputsManager inputs;
   int currentClientPlayer = -1;
+
+  GameState current_game_state = GameState::LogMenu;
 
   static constexpr int screenWidth = 1480;
   static constexpr int screenHeight = 720;

@@ -25,10 +25,6 @@ void PhotonApp::Update() noexcept {
 }
 
 void PhotonApp::Draw() noexcept {
-  // raylib::DrawRectangle(700, 500, 100, 100, raylib::Color{ 255, 0, 0, 255 });
-
-  // raylib::DrawRaylibText("Raylib drawing text with photon in the same app.",
-  //     400, 350, 30, raylib::kWhite);
 }
 
 void PhotonApp::DrawImGui() noexcept {

@@ -17,15 +17,24 @@ void Renderer::Init() noexcept {
 }
 
 void Renderer::Draw() noexcept {
-  customScale += 0.01f;
-  // DrawBackground();
-  raylib::ClearBackground(raylib::Color{36, 77, 99, 1});
-  //DrawColliderShape();
+    if (game_logic->current_game_state == game::GameState::LogMenu)
+    {
+        raylib::ClearBackground(raylib::Color{ 36, 77, 99, 1 });
+        raylib::DrawRaylibText("Use the menu To Connect and Join a Game", 50, 0, 28,
+            raylib::WHITE);
+    }
 
-  DrawRopes();
-  DrawLimit();
-  DrawPlatforms();
-  DrawPlayer();
+    if(game_logic->current_game_state == game::GameState::GameLaunch)
+    {
+        // DrawBackground();
+        raylib::ClearBackground(raylib::Color{ 36, 77, 99, 1 });
+        //DrawColliderShape();
+
+        DrawRopes();
+        DrawLimit();
+        DrawPlatforms();
+        DrawPlayer();
+    }
 }
 
 void Renderer::Deinit() noexcept {

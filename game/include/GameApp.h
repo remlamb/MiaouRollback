@@ -15,6 +15,8 @@ class GameApp {
       : game_logic(gl), game_renderer(renderer) {}
 
   void Init();
+  void InitImgui();
+  void DrawImgui();
   void Deinit();
   void Loop(void);
 
