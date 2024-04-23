@@ -8,11 +8,7 @@ void GameApp::Init() {
 
 	raylib::InitAudioDevice();
 	game_renderer->Init();
-	sound = raylib::LoadSound("data/walkman.wav");
-	music = raylib::LoadMusicStream("data/music.wav");
-	music.looping = true;
-
-	PlayMusicStream(music);
+	audio_manager->Init();
 	InitImgui();
 	game_logic->Init();
 }
@@ -67,8 +63,7 @@ void GameApp::DrawImgui()
 
 void GameApp::Deinit() {
 	game_renderer->Deinit();
-	UnloadSound(sound);  // Unload sound
-	UnloadMusicStream(music);
+	audio_manager->Deinit();
 	raylib::CloseAudioDevice();
 	raylib::CloseWindow();
 
@@ -81,7 +76,7 @@ void GameApp::Loop(void) {
 
 	ImGui_ImplRaylib_ProcessEvents();
 
-	UpdateMusicStream(music);
+	audio_manager->Update();
 	raylib::BeginDrawing();
 	{
 		raylib::ClearBackground(raylib::BLACK);

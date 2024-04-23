@@ -26,14 +26,13 @@ void Renderer::Draw() noexcept {
 
     if(game_logic->current_game_state == game::GameState::GameLaunch)
     {
-        // DrawBackground();
         raylib::ClearBackground(raylib::Color{ 36, 77, 99, 1 });
-        //DrawColliderShape();
+        DrawColliderShape();
 
-        DrawRopes();
-        DrawLimit();
-        DrawPlatforms();
-        DrawPlayer();
+        //DrawRopes();
+        //DrawLimit();
+        //DrawPlatforms();
+        //DrawPlayer();
     }
 }
 

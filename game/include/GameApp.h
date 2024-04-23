@@ -2,17 +2,16 @@
 #include "GameLogic.h"
 #include "NetworkLogic.h"
 #include "Renderer.h"
+#include "AudioManager.h"
 
 class GameApp {
  public:
   game::GameLogic* game_logic;
   Renderer* game_renderer;
+  AudioManager* audio_manager;
 
-  raylib::Sound sound;
-  raylib::Music music;
-
-  GameApp(game::GameLogic* gl, Renderer* renderer)
-      : game_logic(gl), game_renderer(renderer) {}
+  GameApp(game::GameLogic* gl, Renderer* renderer, AudioManager* audiomanager)
+      : game_logic(gl), game_renderer(renderer), audio_manager(audiomanager) {}
 
   void Init();
   void InitImgui();
