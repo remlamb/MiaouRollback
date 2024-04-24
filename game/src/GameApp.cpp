@@ -73,7 +73,7 @@ void GameApp::Deinit() {
 void GameApp::Loop(void) {
 	game_logic->Update();
 	networkLogic_.Run();
-
+	
 	ImGui_ImplRaylib_ProcessEvents();
 
 	audio_manager->Update();

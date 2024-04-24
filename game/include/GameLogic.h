@@ -1,5 +1,5 @@
 #pragma once
-#include "InputsManager.h"
+#include "FrameInput.h"
 #include "PlayerManager.h"
 #include "Timer.h"
 #include "World.h"
@@ -7,13 +7,7 @@
 using namespace raylib;
 
 namespace game {
-    enum class GameState
-    {
-        LogMenu,
-        GameLaunch
-    };
-
-
+enum class GameState { LogMenu, GameLaunch };
 
 /**
  * @brief Represents a link between a physics object and its collider.
@@ -41,14 +35,18 @@ struct collider {
 class GameLogic {
  public:
   Physics::World world_;
-  PlayerManager player{&world_};
-  InputsManager inputs;
-  int currentClientPlayer = -1;
+  PlayerManager player_manager{&world_};
+  Input::FrameInput inputs;
+  static constexpr int invalid_client_player_nbr = -1;
+  int client_player_nbr = invalid_client_player_nbr;
 
   GameState current_game_state = GameState::LogMenu;
 
   static constexpr int screenWidth = 1480;
   static constexpr int screenHeight = 720;
+  static constexpr float fixedUpdateFrenquency = 1 / 50.f;
+
+  std::vector<game::collider> colliders_;
 
   /**
    * @brief Init the game environment.
@@ -67,7 +65,7 @@ class GameLogic {
   /**
    * @brief Manages player inputs, link between the player and game inputs.
    */
-  void ManageInput() noexcept;
+  void ManageInputAndUpdateGameplay() noexcept;
 
   /**
    * @brief Creates a platform in the game world.
@@ -90,10 +88,6 @@ class GameLogic {
    * @brief Updates the colliders in the game world.
    */
   void UpdateCollider() noexcept;
-  /**
-   * @brief Renders the colliders form in the game window, use for debugging.
-   */
-  void RenderColliderObject() noexcept;
 
  private:
   static constexpr int platform_collider_id_ = 10;
@@ -102,6 +96,5 @@ class GameLogic {
   const float border_size_ = 20.0f;
   const Math::Vec2F platform_size_{200.0f, 40.0f};
   Physics::Timer timer_;
-  std::vector<game::collider> colliders_;
 };
 }  // namespace game

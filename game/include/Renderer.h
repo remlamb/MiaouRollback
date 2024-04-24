@@ -10,7 +10,14 @@ class Renderer {
   void Deinit() noexcept;
 
  private:
+  /**
+   * @brief Renders the colliders form in the game window, use for debugging.
+   */
   void DrawColliderShape() noexcept;
+  /**
+   * @brief Draws collider form for debug information for player entities.
+   */
+  void DrawPlayerColliderShape() noexcept;
   void DrawPlatforms() noexcept;
   void DrawRopes() noexcept;
   void DrawPlayer() noexcept;

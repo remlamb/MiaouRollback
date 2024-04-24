@@ -5,10 +5,11 @@ PlayerManager::PlayerManager(Physics::World* world_) : world_(world_) {}
 
 void PlayerManager::SetUp() {
   world_->contactListener = this;
-  players[0].position = Math::Vec2F(50, 650);
-  players[1].position = Math::Vec2F(550, 650);
   trigger_nbrs_.fill(0);
+  players[0].position = player1_spawn_pos_;
+  players[1].position = player2_spawn_pos_;
   int it = 0;
+    //TODO remplacer la variable ID dans la class par local
   for (auto& player : players) {
     Physics::BodyRef bodyRef = world_->CreateBody();
     auto& newBody = world_->GetBody(bodyRef);
@@ -52,10 +53,12 @@ void PlayerManager::SetUp() {
     players_grounded_CollidersRefs_[it] = colliderGroundedRef;
     it++;
   }
+  Update();
 }
 
 void PlayerManager::Update() {
   int it = 0;
+    //TODO Move dans un COlliderRenderer, peut etre activer depuis imgui avec un bool
   for (auto& player : players) {
     auto& collider = world_->GetCollider(players_CollidersRefs_[it]);
     const auto position = world_->GetBody(players_BodyRefs_[it]).Position();
@@ -103,6 +106,7 @@ void PlayerManager::Update() {
     }
 
     player.is_grounded = trigger_nbrs_[it] > 1;
+    std::cout << it << " : nbr trigger : " << trigger_nbrs_[it] << std::endl;
     if (!player.is_grounded) {
       body.AddForce({0, gravity_});
     } else {
@@ -133,59 +137,6 @@ void PlayerManager::Decelerate(int playerIdx) {
   const Math::Vec2F zeroVelocity = {0.0f, body.Velocity().Y};
   body.SetVelocity(
       Math::Vec2F::Lerp(body.Velocity(), zeroVelocity, deceleration_time_));
-}
-
-void PlayerManager::DrawDebug() {
-  int it = 0;
-  for (auto player : players) {
-    auto& curent_collider = world_->GetCollider(players_CollidersRefs_[it]);
-    auto& body = world_->GetBody(players_BodyRefs_[it]);
-    switch (curent_collider._shape) {
-      case Math::ShapeType::Rectangle:
-        raylib::DrawRectangleLines(
-            body.Position().X + curent_collider.rectangleShape.MinBound().X,
-            body.Position().Y + curent_collider.rectangleShape.MinBound().Y,
-            curent_collider.rectangleShape.MaxBound().X -
-                curent_collider.rectangleShape.MinBound().X,
-            curent_collider.rectangleShape.MaxBound().Y -
-                curent_collider.rectangleShape.MinBound().Y,
-            raylib::PURPLE);
-        break;
-      case Math::ShapeType::Circle:
-        raylib::DrawCircleLines(body.Position().X, body.Position().Y,
-                                curent_collider.circleShape.Radius(),
-                                raylib::PURPLE);
-        break;
-      default:
-        break;
-    }
-
-    auto& curent_collider2 =
-        world_->GetCollider(players_grounded_CollidersRefs_[it]);
-    auto& body2 = world_->GetBody(players_BodyRefs_[it]);
-    raylib::Color color = raylib::PURPLE;
-    if (curent_collider2.isTrigger) {
-      color = raylib::BLUE;
-    }
-    switch (curent_collider2._shape) {
-      case Math::ShapeType::Rectangle:
-        DrawRectangleLines(curent_collider2.rectangleShape.MinBound().X,
-                           curent_collider2.rectangleShape.MinBound().Y,
-                           curent_collider2.rectangleShape.MaxBound().X -
-                               curent_collider2.rectangleShape.MinBound().X,
-                           curent_collider2.rectangleShape.MaxBound().Y -
-                               curent_collider2.rectangleShape.MinBound().Y,
-                           color);
-        break;
-      case Math::ShapeType::Circle:
-        DrawCircleLines(body2.Position().X, body2.Position().Y,
-                        curent_collider2.circleShape.Radius(), color);
-        break;
-      default:
-        break;
-    }
-    it++;
-  }
 }
 
 void PlayerManager::OnTriggerEnter(Physics::Collider colliderA,

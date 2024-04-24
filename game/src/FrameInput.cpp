@@ -1,6 +1,6 @@
-#include "InputsManager.h"
+#include "FrameInput.h"
 
-void InputsManager::SetPlayerInputs() {
+void Input::FrameInput::UpdatePlayerInputs() {
   playerInput = 0;
   if (IsKeyDown(KEY_SPACE) ||
       IsGamepadButtonDown(0, GAMEPAD_BUTTON_RIGHT_FACE_DOWN)) {
