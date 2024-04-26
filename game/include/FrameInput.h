@@ -12,7 +12,7 @@ constexpr std::uint8_t kAttack = 1 << 3;
 
 struct FrameInput {
   std::uint8_t playerInput = 0;
-  int frame = 0;
+  //int frame = 0;
 
   void UpdatePlayerInputs();
 };

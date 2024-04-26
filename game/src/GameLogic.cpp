@@ -61,6 +61,7 @@ void GameLogic::DeInit() noexcept {
 
 void GameLogic::ManageInputAndUpdateGameplay() noexcept {
   inputs.UpdatePlayerInputs();
+  saved_inputs.emplace_back(inputs.playerInput);
   if (client_player_nbr == invalid_client_player_nbr) {
     return;
   }

@@ -55,7 +55,7 @@ void NetworkLogic::customEventAction(
       ExitGames::Common::ValueObject<ExitGames::Common::Hashtable>(eventContent)
           .getDataCopy();
 
-    //TODO ici on received l'event (logique Network)
+  // TODO ici on received l'event (logique Network)
   ReceiveEvent(playerNr, static_cast<EventCode>(eventCode), event_data);
 }
 
@@ -121,8 +121,6 @@ void NetworkLogic::JoinRandomOrCreateRoom() noexcept {
           L"Could not join or create room.");
 }
 
-
-
 void NetworkLogic::RaiseEvent(
     bool reliable, EventCode event_code,
     const ExitGames::Common::Hashtable& event_data) noexcept {
@@ -130,17 +128,13 @@ void NetworkLogic::RaiseEvent(
                                          static_cast<nByte>(event_code))) {
     EGLOG(ExitGames::Common::DebugLevel::ERRORS, L"Could not raise event.");
   }
-
 }
-
 
 void NetworkLogic::ReceiveEvent(
     int player_nr, EventCode event_code,
     const ExitGames::Common::Hashtable& event_content) noexcept {
   switch (event_code) {
     case EventCode::kInput: {
-      
-      break;
     }
     default: {
     } break;

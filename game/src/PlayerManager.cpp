@@ -106,7 +106,6 @@ void PlayerManager::Update() {
     }
 
     player.is_grounded = trigger_nbrs_[it] > 1;
-    std::cout << it << " : nbr trigger : " << trigger_nbrs_[it] << std::endl;
     if (!player.is_grounded) {
       body.AddForce({0, gravity_});
     } else {

@@ -4,6 +4,7 @@
 #include "Timer.h"
 #include "World.h"
 #include "raylib_wrapper.h"
+#include <vector>
 using namespace raylib;
 
 namespace game {
@@ -41,6 +42,8 @@ class GameLogic {
   int client_player_nbr = invalid_client_player_nbr;
 
   GameState current_game_state = GameState::LogMenu;
+  std::vector<std::uint8_t> saved_inputs; 
+    
 
   static constexpr int screenWidth = 1480;
   static constexpr int screenHeight = 720;

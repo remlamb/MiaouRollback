@@ -3,7 +3,7 @@
 
 void AudioManager::Init() {
 	sound = raylib::LoadSound("data/walkman.wav");
-	music = raylib::LoadMusicStream("data/music.wav");
+	music = raylib::LoadMusicStream("data/theme.wav");
 	music.looping = true;
 
 	PlayMusicStream(music);
