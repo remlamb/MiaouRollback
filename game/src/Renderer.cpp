@@ -3,8 +3,8 @@
 #include <iostream>
 
 void Renderer::Init() noexcept {
-  icon = raylib::LoadImage("data/weapon.png");
-  SetWindowIcon(icon);
+  //icon = raylib::LoadImage("data/weapon.png");
+  //SetWindowIcon(icon);
   player.Setup("data/player1.png", 0.22f, Pivot::Center);
   player2.Setup("data/player2.png", 0.22f, Pivot::Center);
   playerWeapon.Setup("data/weapon.png", 1.0f, Pivot::Center);
@@ -39,7 +39,7 @@ void Renderer::Draw() noexcept {
 void Renderer::Deinit() noexcept {
   player.TearDown();
   background.TearDown();
-  UnloadImage(icon);
+  //UnloadImage(icon);
 }
 
 void Renderer::DrawPlayerColliderShape() noexcept {
@@ -163,15 +163,13 @@ void Renderer::DrawRopes() noexcept {
 
 void Renderer::DrawPlayer() noexcept {
   raylib::Vector2 playerPosition =
-      raylib::Vector2{game_logic->player_manager.players[0].position.X,
-                      game_logic->player_manager.players[0].position.Y};
+      raylib::Vector2{game_logic->player_manager.GetPlayerPosition(0).X, game_logic->player_manager.GetPlayerPosition(0).Y};
 
   playerWeapon.Draw({playerPosition.x, playerPosition.y - 15}, 0.2f);
   player.Draw({playerPosition.x, playerPosition.y - 15});
 
   raylib::Vector2 player2Position =
-      raylib::Vector2{game_logic->player_manager.players[1].position.X,
-                      game_logic->player_manager.players[1].position.Y};
+      raylib::Vector2{ game_logic->player_manager.GetPlayerPosition(1).X, game_logic->player_manager.GetPlayerPosition(1).Y };
 
   playerWeapon.Draw({player2Position.x, player2Position.y - 15}, 0.2f);
   player2.Draw({player2Position.x, player2Position.y - 15});

@@ -6,7 +6,7 @@ void AudioManager::Init() {
 	music = raylib::LoadMusicStream("data/theme.wav");
 	music.looping = true;
 
-	PlayMusicStream(music);
+	//PlayMusicStream(music);
 }
 
 
@@ -18,5 +18,5 @@ void AudioManager::Deinit() {
 
 
 void AudioManager::Update() {
-	UpdateMusicStream(music);
+	//UpdateMusicStream(music);
 }

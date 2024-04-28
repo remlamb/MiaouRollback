@@ -1,6 +1,7 @@
 #pragma once
 #include "World.h"
 // #include <raylib.h>
+#include "FrameInput.h"
 #include "raylib_wrapper.h"
 using namespace raylib;
 
@@ -12,10 +13,11 @@ using namespace raylib;
  * the current frame.
  * - `velocity`: Reference to the player movement speed in the physical world.
  */
+
+//todo si timer pour action dans la strct pour le ro;lbakc
 struct Player {
-  Math::Vec2F position = {50, 650};  // in pixels
-  Math::Vec2F velocity = {0, 0};
   bool is_grounded = false; //todo remplace par triggernbr
+  std::uint8_t input;
 };
 
 /**
@@ -82,6 +84,8 @@ class PlayerManager : public Physics::ContactListener {
    * @param playerIdx Index of the player.
    */
   void Decelerate(int playerIdx);
+
+  Math::Vec2F GetPlayerPosition(int idx) const noexcept;
 
   void OnTriggerEnter(Physics::Collider colliderA,
                       Physics::Collider colliderB) noexcept override;

@@ -2,11 +2,9 @@
 #include "PhotonApp.h"
 
 int main() {
-  game::GameLogic game_logic;
-  Renderer game_renderer{&game_logic};
-  AudioManager audio_manager;
 
-  GameApp game_app{&game_logic, &game_renderer, &audio_manager};
+
+  GameApp game_app;
 
   game_app.Init();
   raylib::SetTargetFPS(60);

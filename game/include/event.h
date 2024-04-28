@@ -1,6 +1,6 @@
 #pragma once
-
 #include <Common-cpp/inc/defines.h>
+#include <Common-cpp/inc/Containers/Hashtable.h>
 
 /**
  * \brief EventCode is an enum which differentiates between the various
@@ -20,4 +20,9 @@ enum class EventKey : nByte {
   kFrameNbr,
   kDelay,
   kCheckSum
+};
+
+struct NetworkEvent {
+	EventCode code{};
+	ExitGames::Common::Hashtable content{};
 };

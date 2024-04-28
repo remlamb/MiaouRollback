@@ -37,7 +37,7 @@ class Renderer {
   ImageCustom borderLeft;
   ImageCustom borderRight;
   ImageCustom borderTop;
-  raylib::Image icon;
+  //raylib::Image icon;
   raylib::Vector2 center = {
 	  game::GameLogic::screenWidth * 0.5f,
 	  game::GameLogic::screenHeight * 0.5f};
