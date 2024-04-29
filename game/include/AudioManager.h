@@ -1,12 +1,14 @@
 #pragma once
-#include "raylib_wrapper.h"
+#include "GameLogic.h"
 
-class AudioManager
-{
-public:
-	raylib::Sound sound;
-	raylib::Music music;
-	void Init();
-	void Deinit();
-	void Update();
+class AudioManager {
+ public:
+  AudioManager(game::GameLogic* game_logic) { game_logic_ = game_logic; }
+  raylib::Sound sound;
+  raylib::Music music;
+  void Init();
+  void Deinit();
+  void Update();
+private:
+  game::GameLogic* game_logic_ = nullptr;
 };

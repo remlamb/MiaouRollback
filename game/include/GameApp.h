@@ -6,11 +6,14 @@
 #include "RollbackManager.h"
 
 class GameApp {
-public:
+private:
+  bool isColliderVisible_ = false;
+
+ public:
 	RollbackManager rollback_manager;
 	game::GameLogic game_logic{ &rollback_manager};
 	Renderer game_renderer{ &game_logic };
-	AudioManager audio_manager;
+        AudioManager audio_manager{&game_logic};
 
 	void Init();
 	void InitImgui();

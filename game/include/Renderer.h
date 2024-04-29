@@ -6,7 +6,7 @@ class Renderer {
  public:
   Renderer(game::GameLogic* gl) : game_logic(gl) {}
   void Init() noexcept;
-  void Draw() noexcept;
+  void Draw(bool isColliderVisible) noexcept;
   void Deinit() noexcept;
 
  private:
@@ -37,7 +37,7 @@ class Renderer {
   ImageCustom borderLeft;
   ImageCustom borderRight;
   ImageCustom borderTop;
-  //raylib::Image icon;
+  ImageCustom icon;
   raylib::Vector2 center = {
 	  game::GameLogic::screenWidth * 0.5f,
 	  game::GameLogic::screenHeight * 0.5f};

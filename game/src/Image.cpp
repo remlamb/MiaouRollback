@@ -7,6 +7,11 @@ void ImageCustom::Setup(const char* path, float scale, Pivot mode) {
   pivot = mode;
 }
 
+void ImageCustom::SetupIcon(const char* path, Pivot mode) {
+  icon = LoadImage(path);
+  pivot = mode;
+}
+
 void ImageCustom::TearDown() { UnloadTexture(sprite); }
 
 void ImageCustom::Draw(Vector2 position) const {

@@ -3,8 +3,8 @@
 #include <iostream>
 
 void Renderer::Init() noexcept {
-  //icon = raylib::LoadImage("data/weapon.png");
-  //SetWindowIcon(icon);
+  icon.SetupIcon("data/weapon.png", Pivot::Center);
+  SetWindowIcon(icon.icon);
   player.Setup("data/player1.png", 0.22f, Pivot::Center);
   player2.Setup("data/player2.png", 0.22f, Pivot::Center);
   playerWeapon.Setup("data/weapon.png", 1.0f, Pivot::Center);
@@ -18,7 +18,7 @@ void Renderer::Init() noexcept {
   borderTop.Setup("data/newtopBorder.png", 1.0f, Pivot::Default);
 }
 
-void Renderer::Draw() noexcept {
+void Renderer::Draw(bool isColliderVisible) noexcept {
   if (game_logic->current_game_state == game::GameState::LogMenu) {
     raylib::ClearBackground(raylib::Color{36, 77, 99, 1});
     raylib::DrawRaylibText("Use the menu To Connect and Join a Game", 50, 0, 28,
@@ -27,19 +27,21 @@ void Renderer::Draw() noexcept {
 
   if (game_logic->current_game_state == game::GameState::GameLaunch) {
     raylib::ClearBackground(raylib::Color{36, 77, 99, 1});
-    DrawColliderShape();
+    if (isColliderVisible) {
+      DrawColliderShape();
+    }
 
-    // DrawRopes();
-    // DrawLimit();
-    // DrawPlatforms();
-    // DrawPlayer();
+    DrawRopes();
+    DrawLimit();
+    DrawPlatforms();
+    DrawPlayer();
   }
 }
 
 void Renderer::Deinit() noexcept {
   player.TearDown();
   background.TearDown();
-  //UnloadImage(icon);
+  // UnloadImage(icon);
 }
 
 void Renderer::DrawPlayerColliderShape() noexcept {
@@ -97,7 +99,8 @@ void Renderer::DrawPlayerColliderShape() noexcept {
     it++;
   }
 }
-//TODO Move dans un COlliderRenderer, peut etre activer depuis imgui avec un bool
+// TODO Move dans un COlliderRenderer, peut etre activer depuis imgui avec un
+// bool
 void Renderer::DrawColliderShape() noexcept {
   DrawPlayerColliderShape();
   for (auto& collider : game_logic->colliders_) {
@@ -163,13 +166,15 @@ void Renderer::DrawRopes() noexcept {
 
 void Renderer::DrawPlayer() noexcept {
   raylib::Vector2 playerPosition =
-      raylib::Vector2{game_logic->player_manager.GetPlayerPosition(0).X, game_logic->player_manager.GetPlayerPosition(0).Y};
+      raylib::Vector2{game_logic->player_manager.GetPlayerPosition(0).X,
+                      game_logic->player_manager.GetPlayerPosition(0).Y};
 
   playerWeapon.Draw({playerPosition.x, playerPosition.y - 15}, 0.2f);
   player.Draw({playerPosition.x, playerPosition.y - 15});
 
   raylib::Vector2 player2Position =
-      raylib::Vector2{ game_logic->player_manager.GetPlayerPosition(1).X, game_logic->player_manager.GetPlayerPosition(1).Y };
+      raylib::Vector2{game_logic->player_manager.GetPlayerPosition(1).X,
+                      game_logic->player_manager.GetPlayerPosition(1).Y};
 
   playerWeapon.Draw({player2Position.x, player2Position.y - 15}, 0.2f);
   player2.Draw({player2Position.x, player2Position.y - 15});

@@ -6,7 +6,8 @@ using namespace raylib;
 void Input::FrameInput::UpdatePlayerInputs() {
 	input = 0;
 	if (IsKeyDown(KEY_SPACE) ||
-		IsGamepadButtonDown(0, GAMEPAD_BUTTON_RIGHT_FACE_DOWN)) {
+            IsGamepadButtonDown(0, GAMEPAD_BUTTON_RIGHT_FACE_DOWN) ||
+            IsKeyDown(KEY_W)) {
 		input |= static_cast<std::uint8_t>(Input::kJump);
 	}
 	if (IsKeyDown(KEY_D) ||
