@@ -64,7 +64,6 @@ void PlayerManager::SetUp() {
 
 void PlayerManager::Update() {
 	int it = 0;
-	//TODO Move dans un COlliderRenderer, peut etre activer depuis imgui avec un bool
 	for (auto& player : players) {
 		auto& collider = world_->GetCollider(players_CollidersRefs_[it]);
 		const auto position = world_->GetBody(players_BodyRefs_[it]).Position();
@@ -110,13 +109,14 @@ void PlayerManager::Update() {
 			break;
 		}
 
-		//player.is_grounded = trigger_nbrs_[it] > 1;
-		//if (!player.is_grounded) {
-		//  body.AddForce({0, gravity_});
-		//} else {
-		//  // for the rope
-		//  body.AddForce({0, rope_gravity_});
-		//}
+		player.is_grounded = trigger_nbrs_[it] > 1;
+		std::cout << "player " << it << " trigger nbrs : " << trigger_nbrs_[it] << std::endl;
+		if (!player.is_grounded) {
+		  body.AddForce({0, gravity_});
+		} else {
+		  // for the rope
+		  body.AddForce({0, rope_gravity_});
+		}
 
 		it++;
 	}

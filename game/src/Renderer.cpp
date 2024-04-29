@@ -97,7 +97,7 @@ void Renderer::DrawPlayerColliderShape() noexcept {
     it++;
   }
 }
-
+//TODO Move dans un COlliderRenderer, peut etre activer depuis imgui avec un bool
 void Renderer::DrawColliderShape() noexcept {
   DrawPlayerColliderShape();
   for (auto& collider : game_logic->colliders_) {

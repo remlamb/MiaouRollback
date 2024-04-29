@@ -99,7 +99,6 @@ void RollbackManager::SimulateUntilCurrentFrame() const noexcept {
 
 int RollbackManager::ConfirmFrame() noexcept {
     //Todo maxPlayer au lieu de 2
-    std::cout << "Confirm ?" << std::endl;
     for (int player_id = 0; player_id < 2;
         player_id++) {
         const auto input = inputs_[player_id][frame_to_confirm_];

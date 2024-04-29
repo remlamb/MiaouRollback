@@ -20,7 +20,31 @@ namespace game {
 
 	int GameLogic::ComputeChecksum()
 	{
-		return 0;
+		int checksum = 0;
+
+		int it = 0;
+		for (const auto& player : player_manager.players) {
+			auto& body = world_.GetBody(player_manager.players_BodyRefs_[it]);
+			auto& pos = body.Position();
+			const auto* pos_ptr = reinterpret_cast<const int*>(&pos);
+
+			// Add position
+			for (size_t i = 0; i < sizeof(Math::Vec2F) / sizeof(int); i++) {
+				checksum += pos_ptr[i];
+			}
+
+			// Add velocity
+			const auto& velocity = body.Velocity();
+			const auto* velocity_ptr = reinterpret_cast<const int*>(&velocity);
+			for (size_t i = 0; i < sizeof(Math::Vec2F) / sizeof(int); i++) {
+				checksum += velocity_ptr[i];
+			}
+
+			// Add input.
+			checksum += player.input;
+			it++;
+		}
+		return checksum;
 	}
 
 	void GameLogic::RegisterNetworkLogic(NetworkLogic* network)
@@ -207,11 +231,6 @@ namespace game {
 			SendFrameConfirmationEvent(remote_frame_inputs);
 		}
 
-		/*rollback_manager->ConfirmFrame();
-		if (!last_inputs.empty())
-		{
-			last_inputs.erase(last_inputs.begin());
-		}*/
 		ExitGames::Common::MemoryManagement::deallocateArray(inputs);
 	}
 
@@ -221,7 +240,7 @@ namespace game {
 		}
 		rollback_manager->IncreaseCurrentFrame();
 
-		world_.Update(fixedUpdateFrenquency);
+
 		while (!network_events.empty()) {
 			const auto& event = network_events.front();
 
@@ -272,6 +291,7 @@ namespace game {
 
 	void GameLogic::UpdateGameplay() noexcept
 	{
+		world_.Update(fixedUpdateFrenquency);
 		//todo magic nbr
 		for (int i = 0; i < 2; i++)
 		{
