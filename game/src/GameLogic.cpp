@@ -10,6 +10,7 @@ namespace game {
 	void GameLogic::Rollback(const GameLogic& game_logic)
 	{
 		world_ = game_logic.world_;
+		world_.contactListener = &player_manager;
 		player_manager.players = game_logic.player_manager.players;
 	}
 
@@ -39,6 +40,8 @@ namespace game {
 			for (size_t i = 0; i < sizeof(Math::Vec2F) / sizeof(int); i++) {
 				checksum += velocity_ptr[i];
 			}
+
+
 
 			// Add input.
 			checksum += player.input;
@@ -292,6 +295,22 @@ namespace game {
 	void GameLogic::UpdateGameplay() noexcept
 	{
 		world_.Update(fixedUpdateFrenquency);
+		int it = 0;
+		for(auto& player : player_manager.players)
+		{
+			player.is_grounded = player.trigger_nbr > 1;
+			std::cout << "player " << it << " trigger nbrs : " << player.trigger_nbr << std::endl;
+			auto& body = world_.GetBody(player_manager.players_BodyRefs_[it]);
+			if (!player.is_grounded) {
+				body.AddForce({ 0, PlayerManager::gravity_ });
+			}
+			else {
+				// for the rope
+				body.AddForce({ 0, PlayerManager::rope_gravity_ });
+			}
+			it++;
+		}
+
 		//todo magic nbr
 		for (int i = 0; i < 2; i++)
 		{
@@ -312,6 +331,8 @@ namespace game {
 				player_manager.Decelerate(i);
 			}
 		}
+
+
 		UpdateCollider();
 		player_manager.Update();
 	}

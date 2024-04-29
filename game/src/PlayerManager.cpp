@@ -5,7 +5,7 @@ PlayerManager::PlayerManager(Physics::World* world_) : world_(world_) {}
 
 void PlayerManager::SetUp() {
 	world_->contactListener = this;
-	trigger_nbrs_.fill(0);
+	//trigger_nbrs_.fill(0);
 	int it = 0;
 	//TODO remplacer la variable ID dans la class par local
 	for (auto& player : players) {
@@ -108,16 +108,6 @@ void PlayerManager::Update() {
 		default:
 			break;
 		}
-
-		player.is_grounded = trigger_nbrs_[it] > 1;
-		std::cout << "player " << it << " trigger nbrs : " << trigger_nbrs_[it] << std::endl;
-		if (!player.is_grounded) {
-		  body.AddForce({0, gravity_});
-		} else {
-		  // for the rope
-		  body.AddForce({0, rope_gravity_});
-		}
-
 		it++;
 	}
 }
@@ -153,24 +143,24 @@ void PlayerManager::OnTriggerEnter(Physics::Collider colliderA,
 	Physics::Collider colliderB) noexcept {
 	if (colliderA == world_->GetCollider(players_grounded_CollidersRefs_[0]) ||
 		colliderB == world_->GetCollider(players_grounded_CollidersRefs_[0])) {
-		trigger_nbrs_[0]++;
+		players[0].trigger_nbr++;
 	}
 
 	if (colliderA == world_->GetCollider(players_grounded_CollidersRefs_[1]) ||
 		colliderB == world_->GetCollider(players_grounded_CollidersRefs_[1])) {
-		trigger_nbrs_[1]++;
+		players[1].trigger_nbr++;
 	}
 }
 void PlayerManager::OnTriggerExit(Physics::Collider colliderA,
 	Physics::Collider colliderB) noexcept {
 	if (colliderA == world_->GetCollider(players_grounded_CollidersRefs_[0]) ||
 		colliderB == world_->GetCollider(players_grounded_CollidersRefs_[0])) {
-		trigger_nbrs_[0]--;
+		players[0].trigger_nbr--;
 	}
 
 	if (colliderA == world_->GetCollider(players_grounded_CollidersRefs_[1]) ||
 		colliderB == world_->GetCollider(players_grounded_CollidersRefs_[1])) {
-		trigger_nbrs_[1]--;
+		players[1].trigger_nbr--;
 	}
 }
 void PlayerManager::OnCollisionEnter(Physics::Collider colliderA,

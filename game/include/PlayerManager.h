@@ -14,10 +14,11 @@ using namespace raylib;
  * - `velocity`: Reference to the player movement speed in the physical world.
  */
 
-//todo si timer pour action dans la strct pour le ro;lbakc
+ //todo si timer pour action dans la strct pour le ro;lbakc
 struct Player {
-  bool is_grounded = false; //todo remplace par triggernbr
-  std::uint8_t input;
+	bool is_grounded = false; //todo remplace par triggernbr
+	int trigger_nbr = 0;
+	std::uint8_t input;
 };
 
 /**
@@ -30,78 +31,78 @@ struct Player {
  * and trigger event handling for player entities.
  */
 class PlayerManager : public Physics::ContactListener {
- private:
-  Physics::World* world_;
+private:
+	Physics::World* world_;
+	static constexpr float jump_velocity_ = -580.0f;
+	static constexpr float move_velocity_ = 500.0f;
+	static constexpr float collider_radius_ = 28.0f;
+	static constexpr float grounded_collider_pos_y_ = -20.0f;
+	static constexpr Math::Vec2F grounded_collider_dimension_{ 10.0f, 10.0f };
 
-  static constexpr float gravity_ = 1000;
-  static constexpr float rope_gravity_ = 10;
-  static constexpr float jump_velocity_ = -580.0f;
-  static constexpr float move_velocity_ = 500.0f;
-  static constexpr float collider_radius_ = 28.0f;
-  static constexpr float grounded_collider_pos_y_ = -20.0f;
-  static constexpr Math::Vec2F grounded_collider_dimension_{10.0f, 10.0f};
+	static constexpr float acceleration_time_ = 0.04f;
+	static constexpr float deceleration_time_ = 0.1f;
 
-  static constexpr float acceleration_time_ = 0.04f;
-  static constexpr float deceleration_time_ = 0.1f;
+	static constexpr int nbr_player_ = 2;
 
-  static constexpr int nbr_player_ = 2;
+	//TODO manage with screenweight not hardcode
+	//Todo Game COnstant watch olivier git 
+	static constexpr Math::Vec2F player1_spawn_pos_ = { 250, 550 };
+	static constexpr Math::Vec2F player2_spawn_pos_ = { 1480 - 250, 550 };
 
-    //TODO manage with screenweight not hardcode
-    //Todo Game COnstant watch olivier git 
-  static constexpr Math::Vec2F player1_spawn_pos_ = {250, 550};
-  static constexpr Math::Vec2F player2_spawn_pos_ = {1480 - 250, 550};
 
-    
-  std::array<int, nbr_player_> trigger_nbrs_;
-  int collider_id_ = 0;
+	//std::array<int, nbr_player_> trigger_nbrs_;
+	int collider_id_ = 0;
 
- public:
-  PlayerManager(Physics::World* world_);
+public:
 
-  /**
-   * @brief Create player entities within the game world.
-   */
-  void SetUp();
-  /**
-   * @brief Updates player entities and their interactions.
-   */
-  void Update();
+	static constexpr float gravity_ = 1000;
+	static constexpr float rope_gravity_ = 10;
+	PlayerManager(Physics::World* world_);
 
-  /**
-   * @brief Initiates a jump action for a specified player.
-   * @param playerIdx Index of the player.
-   */
-  void Jump(int playerIdx);
-  /**
-   * @brief Initiates a movement action for a specified player.
-   * @param rightDirection Flag indicating the movement direction (true for
-   * right, false for left).
-   * @param playerIdx Index of the player.
-   */
-  void Move(bool rightDirection, int playerIdx);
-  /**
-   * @brief Initiates a deceleration action for a specified player.
-   * @param playerIdx Index of the player.
-   */
-  void Decelerate(int playerIdx);
+	/**
+	 * @brief Create player entities within the game world.
+	 */
+	void SetUp();
+	/**
+	 * @brief Updates player entities and their interactions.
+	 */
+	void Update();
 
-  Math::Vec2F GetPlayerPosition(int idx) const noexcept;
+	/**
+	 * @brief Initiates a jump action for a specified player.
+	 * @param playerIdx Index of the player.
+	 */
+	void Jump(int playerIdx);
+	/**
+	 * @brief Initiates a movement action for a specified player.
+	 * @param rightDirection Flag indicating the movement direction (true for
+	 * right, false for left).
+	 * @param playerIdx Index of the player.
+	 */
+	void Move(bool rightDirection, int playerIdx);
+	/**
+	 * @brief Initiates a deceleration action for a specified player.
+	 * @param playerIdx Index of the player.
+	 */
+	void Decelerate(int playerIdx);
 
-  void OnTriggerEnter(Physics::Collider colliderA,
-                      Physics::Collider colliderB) noexcept override;
-  void OnTriggerExit(Physics::Collider colliderA,
-                     Physics::Collider colliderB) noexcept override;
-  void OnCollisionEnter(Physics::Collider colliderA,
-                        Physics::Collider colliderB) noexcept override;
-  void OnCollisionExit(Physics::Collider colliderA,
-                       Physics::Collider colliderB) noexcept override;
+	Math::Vec2F GetPlayerPosition(int idx) const noexcept;
 
-  std::array<Player, nbr_player_> players;
+	void OnTriggerEnter(Physics::Collider colliderA,
+		Physics::Collider colliderB) noexcept override;
+	void OnTriggerExit(Physics::Collider colliderA,
+		Physics::Collider colliderB) noexcept override;
+	void OnCollisionEnter(Physics::Collider colliderA,
+		Physics::Collider colliderB) noexcept override;
+	void OnCollisionExit(Physics::Collider colliderA,
+		Physics::Collider colliderB) noexcept override;
 
-    // TODO Mettre dans nouvelle struct playerPhysic
-  std::array<Physics::BodyRef, nbr_player_> players_BodyRefs_;
-  std::array<Physics::ColliderRef, nbr_player_> players_CollidersRefs_;
+	std::array<Player, nbr_player_> players;
 
-  std::array<Physics::BodyRef, nbr_player_> players_grounded_BodyRefs_;
-  std::array<Physics::ColliderRef, nbr_player_> players_grounded_CollidersRefs_;
+	// TODO Mettre dans nouvelle struct playerPhysic
+	std::array<Physics::BodyRef, nbr_player_> players_BodyRefs_;
+	std::array<Physics::ColliderRef, nbr_player_> players_CollidersRefs_;
+
+	std::array<Physics::BodyRef, nbr_player_> players_grounded_BodyRefs_;
+	std::array<Physics::ColliderRef, nbr_player_> players_grounded_CollidersRefs_;
 };
