@@ -18,6 +18,10 @@ void Input::FrameInput::UpdatePlayerInputs() {
 		IsGamepadButtonDown(0, GAMEPAD_BUTTON_LEFT_FACE_LEFT)) {
 		input |= static_cast<std::uint8_t>(Input::kLeft);
 	}
+	if (IsKeyDown(KEY_S) ||
+		IsGamepadButtonDown(0, GAMEPAD_BUTTON_RIGHT_FACE_LEFT)) {
+		input |= static_cast<std::uint8_t>(Input::kAttack);
+	}
 }
 
 namespace  Input

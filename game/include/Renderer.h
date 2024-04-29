@@ -21,6 +21,7 @@ class Renderer {
   void DrawPlatforms() noexcept;
   void DrawRopes() noexcept;
   void DrawPlayer() noexcept;
+  void DrawProjectiles() noexcept;
   void DrawBackground() noexcept;
   void DrawLimit() noexcept;
 

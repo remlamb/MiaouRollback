@@ -296,10 +296,21 @@ namespace game {
 	{
 		world_.Update(fixedUpdateFrenquency);
 		int it = 0;
-		for(auto& player : player_manager.players)
+		for (auto& player : player_manager.players)
 		{
+			//Projectile
+			if (player.attack_timer >= 0.0f)
+			{
+				player.attack_timer -= fixedUpdateFrenquency;
+			}
+			else
+			{
+				player.is_projectile_ready = true;
+			}
+
+			//Gravity
 			player.is_grounded = player.trigger_nbr > 1;
-			std::cout << "player " << it << " trigger nbrs : " << player.trigger_nbr << std::endl;
+			//std::cout << "player " << it << " trigger nbrs : " << player.trigger_nbr << std::endl;
 			auto& body = world_.GetBody(player_manager.players_BodyRefs_[it]);
 			if (!player.is_grounded) {
 				body.AddForce({ 0, PlayerManager::gravity_ });
@@ -317,6 +328,10 @@ namespace game {
 			//if (client_player_nbr == invalid_client_player_nbr) {
 			//	return;
 			//}
+			if (player_manager.players[i].input & static_cast<std::uint8_t>(Input::kAttack))
+			{
+				player_manager.Attack(i);
+			}
 
 			if (player_manager.players[i].input & static_cast<std::uint8_t>(Input::kJump)) {
 				player_manager.Jump(i);

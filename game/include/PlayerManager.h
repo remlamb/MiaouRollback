@@ -14,11 +14,21 @@ using namespace raylib;
  * - `velocity`: Reference to the player movement speed in the physical world.
  */
 
- //todo si timer pour action dans la strct pour le ro;lbakc
 struct Player {
-	bool is_grounded = false; //todo remplace par triggernbr
+	bool is_grounded = false;
+	bool is_projectile_ready = true;
 	int trigger_nbr = 0;
+	float attack_timer = 0.0f;
 	std::uint8_t input;
+};
+
+struct Projectile
+{
+	Physics::BodyRef projectile_body;
+	Physics::ColliderRef projectile_collider;
+	//Todo rename collider_id en current_nbr_of_collider -> pplus brief qui explique la logique
+	int collider_id = 0;
+	int nbr_launching_player = 0;
 };
 
 /**
@@ -43,15 +53,26 @@ private:
 	static constexpr float deceleration_time_ = 0.1f;
 
 	static constexpr int nbr_player_ = 2;
+	static constexpr int player1_collider_id_ = 1;
+	static constexpr int player2_collider_id_ = 2;
+
+	static constexpr int player1_groundedcollider_id_ = 3;
+	static constexpr int player2_groundedcollider_id_ = 4;
 
 	//TODO manage with screenweight not hardcode
 	//Todo Game COnstant watch olivier git 
 	static constexpr Math::Vec2F player1_spawn_pos_ = { 250, 550 };
 	static constexpr Math::Vec2F player2_spawn_pos_ = { 1480 - 250, 550 };
 
+	static constexpr float projectile_radius_ = 24.0f;
+	static constexpr int projectile_id_ = 20;
+	static constexpr int neutral_projectile_id_ = 18;
+	static constexpr Math::Vec2F projectile_speed_ = Math::Vec2F(0, 480);
+	static constexpr float time_between_attack = 1.0f;
 
+	int current_projectile_collider_id_ = projectile_id_;
 	//std::array<int, nbr_player_> trigger_nbrs_;
-	int collider_id_ = 0;
+	//int collider_id_ = 0;
 
 public:
 
@@ -86,6 +107,8 @@ public:
 	 */
 	void Decelerate(int playerIdx);
 
+	void Attack(int player_idx);
+
 	Math::Vec2F GetPlayerPosition(int idx) const noexcept;
 
 	void OnTriggerEnter(Physics::Collider colliderA,
@@ -98,6 +121,7 @@ public:
 		Physics::Collider colliderB) noexcept override;
 
 	std::array<Player, nbr_player_> players;
+	std::vector<Projectile> projectiles_;
 
 	// TODO Mettre dans nouvelle struct playerPhysic
 	std::array<Physics::BodyRef, nbr_player_> players_BodyRefs_;

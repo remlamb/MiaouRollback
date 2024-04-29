@@ -16,6 +16,6 @@ void AudioManager::Update() {
   if (game_logic_->current_game_state != game::GameState::GameLaunch) {
 	 return;
   }
-  PlayMusicStream(music);
-  UpdateMusicStream(music);
+  //PlayMusicStream(music);
+  //UpdateMusicStream(music);
 }
