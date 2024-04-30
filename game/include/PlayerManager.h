@@ -18,6 +18,7 @@ struct Player {
 	bool is_grounded = false;
 	bool is_projectile_ready = true;
 	int trigger_nbr = 0;
+	int life_point = 1;
 	float attack_timer = 0.0f;
 	std::uint8_t input;
 };

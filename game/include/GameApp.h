@@ -8,6 +8,7 @@
 class GameApp {
 private:
   bool isColliderVisible_ = false;
+  bool isGameOptionVisible = false;
 
  public:
 	RollbackManager rollback_manager;

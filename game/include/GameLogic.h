@@ -13,7 +13,7 @@
 class RollbackManager;
 class NetworkLogic;
 namespace game {
-	enum class GameState { LogMenu, GameLaunch };
+	enum class GameState { LogMenu, GameLaunch, GameVictory};
 
 	/**
 	 * @brief Represents a link between a physics object and its collider.

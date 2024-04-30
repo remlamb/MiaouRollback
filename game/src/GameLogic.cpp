@@ -268,7 +268,11 @@ namespace game {
 			SetPlayerInput(input, i);
 		}
 		UpdateGameplay();
-
+		//
+		if (player_manager.players[0].life_point <= 0 || player_manager.players[1].life_point <= 0)
+		{
+			current_game_state = GameState::GameVictory;
+		}
 	}
 
 	void GameLogic::DeInit() noexcept {

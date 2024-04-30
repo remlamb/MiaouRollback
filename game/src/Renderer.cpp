@@ -37,6 +37,22 @@ void Renderer::Draw(bool isColliderVisible) noexcept {
 		DrawPlatforms();
 		DrawPlayer();
 	}
+
+	if (game_logic->current_game_state == game::GameState::GameVictory)
+	{
+		raylib::ClearBackground(raylib::Color{ 36, 77, 99, 1 });
+		if (game_logic->player_manager.players[game_logic->client_player_nbr].life_point <= 0)
+		{
+			raylib::DrawRaylibText("You loose", 50, 0, 28,
+				raylib::WHITE);
+		}
+		else
+		{
+			raylib::DrawRaylibText("You Win", 50, 0, 28,
+				raylib::WHITE);
+		}
+
+	}
 }
 
 void Renderer::Deinit() noexcept {
@@ -221,7 +237,7 @@ void Renderer::DrawProjectiles() noexcept
 	{
 		auto body = game_logic->world_.GetBody(
 			projectile.projectile_body);
-		playerWeapon.Draw(Vector2{ body.Position().X, body.Position().Y}, 0.16f);
+		playerWeapon.Draw(Vector2{ body.Position().X, body.Position().Y }, 0.16f);
 	}
 }
 

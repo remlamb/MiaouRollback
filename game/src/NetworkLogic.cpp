@@ -74,7 +74,11 @@ void NetworkLogic::connectReturn(int errorCode,
 	is_connected = true;
 }
 
-void NetworkLogic::disconnectReturn() { std::cout << "client disconnected\n"; }
+void NetworkLogic::disconnectReturn()
+{
+	std::cout << "client disconnected\n";
+	is_connected = false;
+}
 
 void NetworkLogic::leaveRoomReturn(
 	int errorCode, const ExitGames::Common::JString& errorString) {

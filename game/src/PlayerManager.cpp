@@ -226,6 +226,9 @@ void PlayerManager::OnTriggerEnter(Physics::Collider colliderA,
 
 	for (auto& projectile : projectiles_)
 	{
+		//On launch the projectiles are assigned to a player (the launcher),
+		//i can manage with the if the fact that it damage only the other player,
+		//once on the ground I change their id because they all have the same dmg behavior when on the ground (hit every one).
 		if (colliderA == world_->GetCollider(projectile.projectile_collider) ||
 			colliderB == world_->GetCollider(projectile.projectile_collider)) {
 			//todo better code to stop the projectile only in contact of platform
@@ -237,11 +240,13 @@ void PlayerManager::OnTriggerEnter(Physics::Collider colliderA,
 				projectile_collider.ID = neutral_projectile_id_;
 			}
 
+
 			if(colliderA.ID == player1_collider_id_ || colliderB.ID == player1_collider_id_)
 			{
 				if(projectile.nbr_launching_player != 0)
 				{
 					std::cout << "Touched ! " << std::endl;
+					players[0].life_point--;
 				}
 
 			}
@@ -250,19 +255,27 @@ void PlayerManager::OnTriggerEnter(Physics::Collider colliderA,
 				if (projectile.nbr_launching_player != 1)
 				{
 					std::cout << "Touched ! " << std::endl;
+					players[1].life_point--;
 				}
 			}
 
 
-			//si neutral et player 1 ou player 2
+
+			//if neutral and player 1 or player 2
 			if ((colliderA.ID == neutral_projectile_id_ || colliderB.ID == neutral_projectile_id_) && (colliderA.ID == player1_collider_id_ || colliderB.ID == player1_collider_id_))
 			{
+				//todo manage projectile avec un slot limite
+				//projectiles_.clear();
 				std::cout << "Touched ! " << std::endl;
+				players[0].life_point--;
 			}
 
 			if ((colliderA.ID == neutral_projectile_id_ || colliderB.ID == neutral_projectile_id_) && (colliderA.ID == player2_collider_id_ || colliderB.ID == player2_collider_id_))
 			{
+				//todo manage projectile avec un slot limite
+				//projectiles_.clear();
 				std::cout << "Touched ! " << std::endl;
+				players[1].life_point--;
 			}
 		}
 	}
