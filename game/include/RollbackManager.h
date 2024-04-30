@@ -25,8 +25,7 @@ public:
 		current_game_manager_ = current_game_manager;
 		confirmed_game_manager_.Init();
 
-		//todo change 2 to game_constants::kMaxPlayerCount
-		for (std::size_t i = 0; i < 2; i++) {
+		for (std::size_t i = 0; i < game::max_player; i++) {
 			inputs_[i].resize(kMaxFrameCount);
 		}
 	}
@@ -101,11 +100,11 @@ private:
 	static constexpr short kMaxFrameCount = 30'000;
 
 	std::array<std::vector<Input::FrameInput>,
-		2> inputs_{};
+		game::max_player> inputs_{};
 	/**
 	 * \brief last_inputs_ is an array which stores the last inputs received by the
 	 * different players.
 	 */
-	std::array<Input::FrameInput, 2> last_inputs_{};
+	std::array<Input::FrameInput, game::max_player> last_inputs_{};
 };
 

@@ -3,8 +3,8 @@
 #include "imgui_impl_raylib.h"
 
 void GameApp::Init() {
-	raylib::InitWindow(game::GameLogic::screenWidth,
-		game::GameLogic::screenHeight, "Online Game");
+  raylib::InitWindow(game::screen_width,
+		game::screen_height, "Online Game");
 
 	raylib::InitAudioDevice();
 	game_renderer.Init();

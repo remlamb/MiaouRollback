@@ -66,9 +66,6 @@ namespace game {
 		int client_player_nbr = invalid_client_player_nbr;
 
 		GameState current_game_state = GameState::LogMenu;
-
-		static constexpr int screenWidth = 1480;
-		static constexpr int screenHeight = 720;
 		static constexpr float fixedUpdateFrenquency = 1 / 50.f;
 
 		std::vector<game::collider> colliders_;

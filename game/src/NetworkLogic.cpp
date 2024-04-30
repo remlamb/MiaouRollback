@@ -36,7 +36,7 @@ void NetworkLogic::joinRoomEventAction(
 		game_logic_->client_player_nbr = playerNr - 1;
 		game_logic_->rollback_manager->confirmed_game_manager_.client_player_nbr = playerNr - 1;
 	}
-	if (playerNr >= 2) {
+	if (playerNr >= game::max_player) {
 		game_logic_->current_game_state = game::GameState::GameLaunch;
 		game_logic_->rollback_manager->confirmed_game_manager_.current_game_state = game::GameState::GameLaunch;
 	}
@@ -122,7 +122,7 @@ void NetworkLogic::JoinRandomRoom(
 
 void NetworkLogic::JoinRandomOrCreateRoom() noexcept {
 	const auto game_id = ExitGames::Common::JString();
-	const ExitGames::LoadBalancing::RoomOptions room_options(true, true, 2);
+	const ExitGames::LoadBalancing::RoomOptions room_options(true, true, game::max_player);
 	if (!mLoadBalancingClient.opJoinRandomOrCreateRoom(game_id, room_options))
 		EGLOG(ExitGames::Common::DebugLevel::ERRORS,
 			L"Could not join or create room.");

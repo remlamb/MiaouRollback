@@ -6,7 +6,7 @@
 #include "raylib_wrapper.h"
 
 void PhotonApp::Setup() noexcept {
-  raylib::InitWindow(1080, 720, "Photon App");
+  raylib::InitWindow(game::screen_width, game::screen_height, "Photon App");
 
   ImGui::CreateContext();
   ImGuiIO& io = ImGui::GetIO();

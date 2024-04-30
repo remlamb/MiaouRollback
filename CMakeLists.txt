@@ -106,8 +106,8 @@ endif ()
 
 if (NOT EMSCRIPTEN)
 
- add_executable(photonImplementation main/photonImplementation.cpp)
-    target_link_libraries(photonImplementation PRIVATE game raylib imgui::imgui rl_imgui math common physics photon)
+ add_executable(main main/main.cpp)
+    target_link_libraries(main PRIVATE game raylib imgui::imgui rl_imgui math common physics photon)
 
 
 

@@ -6,7 +6,6 @@ PlayerManager::PlayerManager(Physics::World* world_) : world_(world_) {}
 void PlayerManager::SetUp() {
 	world_->contactListener = this;
 	int it = 0;
-	//TODO remplacer la variable ID dans la class par local
 	for (auto& player : players) {
 		Physics::BodyRef bodyRef = world_->CreateBody();
 		auto& newBody = world_->GetBody(bodyRef);

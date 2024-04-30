@@ -194,19 +194,19 @@ void Renderer::DrawColliderShape() noexcept {
 }
 
 void Renderer::DrawPlatforms() noexcept {
-	platform.Draw(raylib::Vector2{ 250, game::GameLogic::screenHeight - 130 },
+	platform.Draw(raylib::Vector2{ 250, game::screen_height  - 130 },
 		1.4f);
-	platform.Draw(raylib::Vector2{ game::GameLogic::screenWidth - 250,
-								  game::GameLogic::screenHeight - 130 },
+	platform.Draw(raylib::Vector2{ game::screen_width - 250,
+								  game::screen_height  - 130 },
 		1.4f);
-	platform.Draw(raylib::Vector2{ game::GameLogic::screenWidth * 0.5,
-								  game::GameLogic::screenHeight - 240 },
+	platform.Draw(raylib::Vector2{ game::screen_width * 0.5,
+								  game::screen_height  - 240 },
 		1.4f);
 }
 
 void Renderer::DrawRopes() noexcept {
 	rope.Draw(raylib::Vector2{ 450, 160 });
-	rope.Draw(raylib::Vector2{ game::GameLogic::screenWidth - 450, 160 });
+	rope.Draw(raylib::Vector2{ game::screen_width - 450, 160 });
 }
 
 void Renderer::DrawPlayer() noexcept {
@@ -244,8 +244,8 @@ void Renderer::DrawProjectiles() noexcept
 void Renderer::DrawBackground() noexcept { background.Draw(center); }
 
 void Renderer::DrawLimit() noexcept {
-	borderBottom.Draw(raylib::Vector2{ 0, game::GameLogic::screenHeight - 20 });
+	borderBottom.Draw(raylib::Vector2{ 0, game::screen_height  - 20 });
 	borderLeft.Draw(raylib::Vector2{ 0 - 20, 0 });
-	borderRight.Draw(raylib::Vector2{ game::GameLogic::screenWidth - 60, 0 });
+	borderRight.Draw(raylib::Vector2{ game::screen_width - 60, 0 });
 	borderTop.Draw(raylib::Vector2{ 0 - 5, 0 - 5 });
 }

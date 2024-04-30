@@ -85,8 +85,7 @@ void RollbackManager::SimulateUntilCurrentFrame() const noexcept {
 
     for (short frame = static_cast<short>(confirmed_frame_ + 1);
         frame < current_frame_; frame++) {
-        //Todo maxPlayer au lieu de 2 
-        for (int player_id = 0; player_id < 2;
+        for (int player_id = 0; player_id < game::max_player;
             player_id++) {
             const auto input = inputs_[player_id][frame];
             current_game_manager_->SetPlayerInput(input, player_id);
@@ -98,8 +97,7 @@ void RollbackManager::SimulateUntilCurrentFrame() const noexcept {
 }
 
 int RollbackManager::ConfirmFrame() noexcept {
-    //Todo maxPlayer au lieu de 2
-    for (int player_id = 0; player_id < 2;
+    for (int player_id = 0; player_id < game::max_player;
         player_id++) {
         const auto input = inputs_[player_id][frame_to_confirm_];
         confirmed_game_manager_.SetPlayerInput(input, player_id);

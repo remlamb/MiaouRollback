@@ -1,7 +1,7 @@
 #pragma once
 #include "World.h"
-// #include <raylib.h>
 #include "FrameInput.h"
+#include "Constants.h"
 #include "raylib_wrapper.h"
 using namespace raylib;
 
@@ -27,8 +27,7 @@ struct Projectile
 {
 	Physics::BodyRef projectile_body;
 	Physics::ColliderRef projectile_collider;
-	//Todo rename collider_id en current_nbr_of_collider -> pplus brief qui explique la logique
-	int collider_id = 0;
+	int current_collider_nbr = 0;
 	int nbr_launching_player = 0;
 };
 
@@ -53,17 +52,15 @@ private:
 	static constexpr float acceleration_time_ = 0.04f;
 	static constexpr float deceleration_time_ = 0.1f;
 
-	static constexpr int nbr_player_ = 2;
+	static constexpr int nbr_player_ = game::max_player;
 	static constexpr int player1_collider_id_ = 1;
 	static constexpr int player2_collider_id_ = 2;
 
 	static constexpr int player1_groundedcollider_id_ = 3;
 	static constexpr int player2_groundedcollider_id_ = 4;
 
-	//TODO manage with screenweight not hardcode
-	//Todo Game COnstant watch olivier git 
 	static constexpr Math::Vec2F player1_spawn_pos_ = { 250, 550 };
-	static constexpr Math::Vec2F player2_spawn_pos_ = { 1480 - 250, 550 };
+	static constexpr Math::Vec2F player2_spawn_pos_ = { game::screen_width - 250, 550 };
 
 	static constexpr float projectile_radius_ = 24.0f;
 	static constexpr int projectile_id_ = 20;
@@ -124,7 +121,6 @@ public:
 	std::array<Player, nbr_player_> players;
 	std::vector<Projectile> projectiles_;
 
-	// TODO Mettre dans nouvelle struct playerPhysic
 	std::array<Physics::BodyRef, nbr_player_> players_BodyRefs_;
 	std::array<Physics::ColliderRef, nbr_player_> players_CollidersRefs_;
 
