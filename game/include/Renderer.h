@@ -4,7 +4,8 @@
 
 class Renderer {
  public:
-  Renderer(game::GameLogic* gl) : game_logic(gl) {}
+  Renderer(game::GameLogic* gl, NetworkLogic* network_logic)
+      : game_logic(gl), network_logic_(network_logic) {}
   void Init() noexcept;
   void Draw(bool isColliderVisible) noexcept;
   void Deinit() noexcept;
@@ -26,6 +27,7 @@ class Renderer {
   void DrawLimit() noexcept;
 
   game::GameLogic* game_logic = nullptr;
+  NetworkLogic* network_logic_ = nullptr;
 
   ImageCustom player;
   ImageCustom player2;
@@ -33,6 +35,7 @@ class Renderer {
   ImageCustom background;
   ImageCustom platform;
   ImageCustom rope;
+  ImageCustom main_menu_bg;
 
   ImageCustom borderBottom;
   ImageCustom borderLeft;

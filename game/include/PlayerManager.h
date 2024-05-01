@@ -119,7 +119,9 @@ public:
 		Physics::Collider colliderB) noexcept override;
 
 	std::array<Player, nbr_player_> players;
+	//projectile confirmé
 	std::vector<Projectile> projectiles_;
+	//add vector projectile detruit/noncomfirmé
 
 	std::array<Physics::BodyRef, nbr_player_> players_BodyRefs_;
 	std::array<Physics::ColliderRef, nbr_player_> players_CollidersRefs_;

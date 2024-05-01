@@ -1,19 +1,19 @@
 #pragma once
 
-#include "event.h"
-
 #include <Common-cpp/inc/Logger.h>
 #include <LoadBalancing-cpp/inc/Client.h>
 #include <LoadBalancing-cpp/inc/Listener.h>
 
 #include "GameLogic.h"
-
+#include "event.h"
 
 class NetworkLogic : private ExitGames::LoadBalancing::Listener {
  public:
   bool is_connected = false;
+  const char* currentLogInfo = "";
   NetworkLogic(const ExitGames::Common::JString& appID,
-               const ExitGames::Common::JString& appVersion, game::GameLogic* game_logic);
+               const ExitGames::Common::JString& appVersion,
+               game::GameLogic* game_logic);
   void Connect();
   void Disconnect();
   void Run();
@@ -26,13 +26,11 @@ class NetworkLogic : private ExitGames::LoadBalancing::Listener {
 
   void JoinRandomOrCreateRoom() noexcept;
 
-    void RaiseEvent(
-      bool reliable, EventCode event_code,
-      const ExitGames::Common::Hashtable& event_data) noexcept;
+  void RaiseEvent(bool reliable, EventCode event_code,
+                  const ExitGames::Common::Hashtable& event_data) noexcept;
 
-    void ReceiveEvent(
-        int player_nr, EventCode event_code,
-        const ExitGames::Common::Hashtable& event_content) noexcept;
+  void ReceiveEvent(int player_nr, EventCode event_code,
+                    const ExitGames::Common::Hashtable& event_content) noexcept;
 
  private:
   ExitGames::LoadBalancing::Client mLoadBalancingClient;
@@ -61,5 +59,4 @@ class NetworkLogic : private ExitGames::LoadBalancing::Listener {
 
   void leaveRoomReturn(int errorCode,
                        const ExitGames::Common::JString& errorString) override;
-
 };

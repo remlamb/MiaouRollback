@@ -30,15 +30,15 @@ if (NOT EMSCRIPTEN)
     set_target_properties(photon PROPERTIES LINKER_LANGUAGE CXX)
     target_include_directories(photon PUBLIC libs)
     #ReleaseVersion:
-    #   target_link_libraries(photon PUBLIC
-    #            ${CMAKE_CURRENT_SOURCE_DIR}/externals/photon/Common-cpp/lib/Common-cpp_vc17_release_windows_md_x64.lib
-    #            ${CMAKE_CURRENT_SOURCE_DIR}/externals/photon/Photon-cpp/lib/Photon-cpp_vc17_release_windows_md_x64.lib
-    #   )
+       target_link_libraries(photon PUBLIC
+                ${CMAKE_CURRENT_SOURCE_DIR}/libs/Common-cpp/lib/Common-cpp_vc17_release_windows_md_x64.lib
+                ${CMAKE_CURRENT_SOURCE_DIR}/libs/Photon-cpp/lib/Photon-cpp_vc17_release_windows_md_x64.lib
+       )
     #DebugVersion
-        target_link_libraries(photon PUBLIC
-                ${CMAKE_CURRENT_SOURCE_DIR}/libs/Common-cpp/lib/Common-cpp_vc17_debug_windows_md_x64.lib
-                ${CMAKE_CURRENT_SOURCE_DIR}/libs/Photon-cpp/lib/Photon-cpp_vc17_debug_windows_md_x64.lib
-        )
+        #target_link_libraries(photon PUBLIC
+        #        ${CMAKE_CURRENT_SOURCE_DIR}/libs/Common-cpp/lib/Common-cpp_vc17_debug_windows_md_x64.lib
+        #        ${CMAKE_CURRENT_SOURCE_DIR}/libs/Photon-cpp/lib/Photon-cpp_vc17_debug_windows_md_x64.lib
+        #)
 endif()
 
 
@@ -95,8 +95,6 @@ set_target_properties(game PROPERTIES LINKER_LANGUAGE CXX)
 target_include_directories(game PUBLIC game/include/)
 target_link_libraries(game PRIVATE raylib imgui::imgui rl_imgui math common physics photon)
 
-##add_executable(main main/main.cpp)
-##target_link_libraries(main PRIVATE raylib imgui::imgui rl_imgui math common physics game photon)
 
 if (EMSCRIPTEN)
         ## The local resources path needs to be mapped to /data virtual path

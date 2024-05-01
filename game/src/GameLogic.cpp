@@ -108,12 +108,11 @@ void GameLogic::OnFrameConfirmationReceived(
     return;
   }
 
-  int checksum = 0;
   std::vector<Input::FrameInput> frame_inputs{};
 
   const auto checksum_value =
       event_content.getValue(static_cast<nByte>(EventKey::kCheckSum));
-  checksum = ExitGames::Common::ValueObject<int>(checksum_value).getDataCopy();
+  int checksum = ExitGames::Common::ValueObject<int>(checksum_value).getDataCopy();
 
   const auto input_value =
       event_content.getValue(static_cast<nByte>(EventKey::kPlayerInput));
@@ -205,6 +204,11 @@ void GameLogic::OnInputReceived(const ExitGames::Common::Hashtable& content) {
   const int inputs_count =
       *ExitGames::Common::ValueObject<Input::FrameInput*>(input_value)
            .getSizes();
+
+  if (inputs_count <= 0)
+  {
+	  return;
+  }
 
   remote_frame_inputs.reserve(inputs_count);
   for (int i = 0; i < inputs_count; i++) {

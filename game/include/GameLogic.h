@@ -40,6 +40,7 @@ namespace game {
 	 */
 	class GameLogic {
 	public:
+		//event etat spawning, etat de gameplay -> qui bouge les joueurs avec un timer qui freeze un certain temps, (pas de input)
 		GameLogic(RollbackManager* rollback)
 		{
 			rollback_manager = rollback;

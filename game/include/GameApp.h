@@ -13,7 +13,7 @@ private:
  public:
 	RollbackManager rollback_manager;
 	game::GameLogic game_logic{ &rollback_manager};
-	Renderer game_renderer{ &game_logic };
+        Renderer game_renderer{&game_logic, &networkLogic_};
         AudioManager audio_manager{&game_logic};
 
 	void Init();
