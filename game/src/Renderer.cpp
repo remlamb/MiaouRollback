@@ -19,6 +19,9 @@ void Renderer::Init() noexcept {
   border_right_.Setup("data/BorderRight.png", 1.0f, Pivot::Default);
   border_top_.Setup("data/newtopBorder.png", 1.0f, Pivot::Default);
   main_menu_bg_.Setup("data/main_menu.png", 1.0f, Pivot::Center);
+
+  player1_life_point_.Setup("data/P1LP.png", 1.0f, Pivot::Center);
+  player2_life_point_.Setup("data/P2LP.png", 1.0f, Pivot::Center);
 }
 
 void Renderer::Draw(bool isColliderVisible) noexcept {
@@ -32,7 +35,7 @@ void Renderer::Draw(bool isColliderVisible) noexcept {
   }
 
   if (game_logic_->current_game_state == game::GameState::GameLaunch) {
-      DrawBackground();
+    DrawBackground();
     raylib::ClearBackground(raylib::Color{36, 77, 99, 1});
     if (isColliderVisible) {
       DrawColliderShape();
@@ -43,6 +46,7 @@ void Renderer::Draw(bool isColliderVisible) noexcept {
     DrawLimit();
     DrawPlatforms();
     DrawPlayer();
+    DrawUI();
   }
 
   if (game_logic_->current_game_state == game::GameState::GameVictory) {
@@ -231,7 +235,8 @@ void Renderer::DrawProjectiles() noexcept {
   }
 
   for (int i = 0; i < game_logic_->player_manager.max_projectile_; i++) {
-    auto pos = raylib::Vector2{game_logic_->player_manager.GetProjectilePosition(i).X,
+    auto pos =
+        raylib::Vector2{game_logic_->player_manager.GetProjectilePosition(i).X,
                         game_logic_->player_manager.GetProjectilePosition(i).Y};
     player_weapon_.Draw(pos, 0.16f);
   }
@@ -244,4 +249,26 @@ void Renderer::DrawLimit() noexcept {
   border_left_.Draw(raylib::Vector2{0 - 20, 0});
   border_right_.Draw(raylib::Vector2{game::screen_width - 60, 0});
   border_top_.Draw(raylib::Vector2{0 - 5, 0 - 5});
+}
+
+void Renderer::DrawUI() noexcept {
+  // if (game_logic_->player_manager.players[0].life_point > 0) {
+  //   player1_life_point_.Draw(raylib::Vector2{20, 20}, 0.4f);
+  // }
+
+  for (int i = game_logic_->player_manager.players[0].life_point; i > 0; i--) {
+    player1_life_point_.Draw(raylib::Vector2{static_cast<float>(50 * i), 40},
+                             0.2f);
+  }
+
+  // if (game_logic_->player_manager.players[1].life_point > 0) {
+  //   player2_life_point_.Draw(raylib::Vector2{game::screen_width - 20, 20},
+  //                            0.4f);
+  // }
+
+  for (int i = game_logic_->player_manager.players[1].life_point; i > 0; i--) {
+    player2_life_point_.Draw(
+        raylib::Vector2{static_cast<float>(game::screen_width - 50 * i), 40},
+        0.2f);
+  }
 }

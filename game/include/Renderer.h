@@ -25,6 +25,7 @@ class Renderer {
   void DrawProjectiles() noexcept;
   void DrawBackground() noexcept;
   void DrawLimit() noexcept;
+  void DrawUI() noexcept;
 
   game::GameLogic* game_logic_ = nullptr;
   NetworkLogic* network_logic_ = nullptr;
@@ -42,6 +43,9 @@ class Renderer {
   ImageCustom border_right_;
   ImageCustom border_top_;
   ImageCustom icon_;
+
+  ImageCustom player1_life_point_;
+  ImageCustom player2_life_point_;
   raylib::Vector2 center_pos_ = {game::screen_width * 0.5f,
-                            game::screen_height * 0.5f};
+                                 game::screen_height * 0.5f};
 };

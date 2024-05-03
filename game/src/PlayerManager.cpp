@@ -235,6 +235,8 @@ void PlayerManager::OnTriggerEnter(Physics::Collider colliderA,
         if (projectile.nbr_launching_player != 0) {
           std::cout << "Touched ! " << std::endl;
           ResetProjectiles();
+          world_->GetBody(players_BodyRefs_[0]).SetPosition(player1_spawn_pos_);
+          world_->GetBody(players_BodyRefs_[1]).SetPosition(player2_spawn_pos_);
           players[0].life_point--;
         }
       }
@@ -243,6 +245,8 @@ void PlayerManager::OnTriggerEnter(Physics::Collider colliderA,
         if (projectile.nbr_launching_player != 1) {
           std::cout << "Touched ! " << std::endl;
           ResetProjectiles();
+          world_->GetBody(players_BodyRefs_[0]).SetPosition(player1_spawn_pos_);
+          world_->GetBody(players_BodyRefs_[1]).SetPosition(player2_spawn_pos_);
           players[1].life_point--;
         }
       }
@@ -256,6 +260,8 @@ void PlayerManager::OnTriggerEnter(Physics::Collider colliderA,
         // old_projectiles_.clear();
         std::cout << "Touched ! " << std::endl;
         ResetProjectiles();
+        world_->GetBody(players_BodyRefs_[0]).SetPosition(player1_spawn_pos_);
+        world_->GetBody(players_BodyRefs_[1]).SetPosition(player2_spawn_pos_);
         players[0].life_point--;
       }
 
@@ -267,6 +273,8 @@ void PlayerManager::OnTriggerEnter(Physics::Collider colliderA,
         // old_projectiles_.clear();
         std::cout << "Touched ! " << std::endl;
         ResetProjectiles();
+        world_->GetBody(players_BodyRefs_[0]).SetPosition(player1_spawn_pos_);
+        world_->GetBody(players_BodyRefs_[1]).SetPosition(player2_spawn_pos_);
         players[1].life_point--;
       }
     }
