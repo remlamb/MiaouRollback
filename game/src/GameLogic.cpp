@@ -161,6 +161,7 @@ void GameLogic::Init() noexcept {
   world_.Init();
   player_manager.SetUp();
 
+
   //// Border
   CreatePlatform({0, 0}, {0.0, 0.0}, {game::screen_width, border_size_});
   CreatePlatform({0, 0}, {0.0, 0.0}, {border_size_, game::screen_height});

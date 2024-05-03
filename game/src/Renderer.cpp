@@ -5,34 +5,33 @@
 #include "NetworkLogic.h"
 
 void Renderer::Init() noexcept {
-  icon.SetupIcon("data/weapon.png", Pivot::Center);
-  SetWindowIcon(icon.icon);
-  player.Setup("data/player1.png", 0.22f, Pivot::Center);
-  player2.Setup("data/player2.png", 0.22f, Pivot::Center);
-  playerWeapon.Setup("data/weapon.png", 1.0f, Pivot::Center);
-  background.Setup("data/bg2.png", 1.0f, Pivot::Center);
-  platform.Setup("data/platform.png", 0.10f, Pivot::Center);
-  rope.Setup("data/rope.png", 1.0f, Pivot::Center);
+  icon_.SetupIcon("data/weapon.png", Pivot::Center);
+  SetWindowIcon(icon_.icon);
+  player_.Setup("data/player1.png", 0.22f, Pivot::Center);
+  player2_.Setup("data/player2.png", 0.22f, Pivot::Center);
+  player_weapon_.Setup("data/weapon.png", 1.0f, Pivot::Center);
+  background_.Setup("data/bg2.png", 1.0f, Pivot::Center);
+  platform_.Setup("data/platform.png", 0.10f, Pivot::Center);
+  rope_.Setup("data/rope.png", 1.0f, Pivot::Center);
 
-  borderBottom.Setup("data/newbotBorder.png", 1.0f, Pivot::Default);
-  borderLeft.Setup("data/TestBorder.png", 1.0f, Pivot::Default);
-  borderRight.Setup("data/BorderRight.png", 1.0f, Pivot::Default);
-  borderTop.Setup("data/newtopBorder.png", 1.0f, Pivot::Default);
-  main_menu_bg.Setup("data/main_menu.png", 1.0f, Pivot::Center);
+  border_bottom_.Setup("data/newbotBorder.png", 1.0f, Pivot::Default);
+  border_left_.Setup("data/TestBorder.png", 1.0f, Pivot::Default);
+  border_right_.Setup("data/BorderRight.png", 1.0f, Pivot::Default);
+  border_top_.Setup("data/newtopBorder.png", 1.0f, Pivot::Default);
+  main_menu_bg_.Setup("data/main_menu.png", 1.0f, Pivot::Center);
 }
 
 void Renderer::Draw(bool isColliderVisible) noexcept {
-  if (game_logic->current_game_state == game::GameState::LogMenu) {
+  if (game_logic_->current_game_state == game::GameState::LogMenu) {
     raylib::ClearBackground(raylib::Color{20, 20, 20, 1});
-    main_menu_bg.Draw(center);
-    raylib::DrawRaylibText(game::game_name, 50, 40, 28,
+    main_menu_bg_.Draw(center_pos_);
+    raylib::DrawRaylibText(game::game_name, 50, 40, 28, raylib::WHITE);
+    raylib::DrawRaylibText("Log:", 500, 500, 12, raylib::WHITE);
+    raylib::DrawRaylibText(network_logic_->currentLogInfo, 500, 520, 12,
                            raylib::WHITE);
-    raylib::DrawRaylibText("Log:", 500, 500, 12,
-                           raylib::WHITE);
-    raylib::DrawRaylibText(network_logic_->currentLogInfo, 500, 520, 12, raylib::WHITE);
   }
 
-  if (game_logic->current_game_state == game::GameState::GameLaunch) {
+  if (game_logic_->current_game_state == game::GameState::GameLaunch) {
     raylib::ClearBackground(raylib::Color{36, 77, 99, 1});
     if (isColliderVisible) {
       DrawColliderShape();
@@ -45,9 +44,9 @@ void Renderer::Draw(bool isColliderVisible) noexcept {
     DrawPlayer();
   }
 
-  if (game_logic->current_game_state == game::GameState::GameVictory) {
+  if (game_logic_->current_game_state == game::GameState::GameVictory) {
     raylib::ClearBackground(raylib::Color{36, 77, 99, 1});
-    if (game_logic->player_manager.players[game_logic->client_player_nbr]
+    if (game_logic_->player_manager.players[game_logic_->client_player_nbr]
             .life_point <= 0) {
       raylib::DrawRaylibText("You loose", 50, 0, 28, raylib::WHITE);
     } else {
@@ -57,18 +56,17 @@ void Renderer::Draw(bool isColliderVisible) noexcept {
 }
 
 void Renderer::Deinit() noexcept {
-  player.TearDown();
-  background.TearDown();
-  // UnloadImage(icon);
+  player_.TearDown();
+  background_.TearDown();
 }
 
 void Renderer::DrawPlayerColliderShape() noexcept {
   int it = 0;
-  for (auto player : game_logic->player_manager.players) {
-    const auto& curent_collider = game_logic->world_.GetCollider(
-        game_logic->player_manager.players_CollidersRefs_[it]);
-    auto& body = game_logic->world_.GetBody(
-        game_logic->player_manager.players_BodyRefs_[it]);
+  for (auto player : game_logic_->player_manager.players) {
+    const auto& curent_collider = game_logic_->world_.GetCollider(
+        game_logic_->player_manager.players_CollidersRefs_[it]);
+    auto& body = game_logic_->world_.GetBody(
+        game_logic_->player_manager.players_BodyRefs_[it]);
     switch (curent_collider._shape) {
       case Math::ShapeType::Rectangle:
         raylib::DrawRectangleLines(
@@ -89,10 +87,10 @@ void Renderer::DrawPlayerColliderShape() noexcept {
         break;
     }
 
-    auto& curent_collider2 = game_logic->world_.GetCollider(
-        game_logic->player_manager.players_grounded_CollidersRefs_[it]);
-    auto& body2 = game_logic->world_.GetBody(
-        game_logic->player_manager.players_BodyRefs_[it]);
+    auto& curent_collider2 = game_logic_->world_.GetCollider(
+        game_logic_->player_manager.players_grounded_CollidersRefs_[it]);
+    auto& body2 = game_logic_->world_.GetBody(
+        game_logic_->player_manager.players_BodyRefs_[it]);
     auto color = raylib::PURPLE;
     if (curent_collider2.isTrigger) {
       color = raylib::BLUE;
@@ -117,10 +115,10 @@ void Renderer::DrawPlayerColliderShape() noexcept {
     it++;
   }
 
-  for (const auto projectile : game_logic->player_manager.projectiles_) {
+  for (const auto projectile : game_logic_->player_manager.projectiles_) {
     auto collider =
-        game_logic->world_.GetCollider(projectile.projectile_collider);
-    auto body = game_logic->world_.GetBody(projectile.projectile_body);
+        game_logic_->world_.GetCollider(projectile.projectile_collider);
+    auto body = game_logic_->world_.GetBody(projectile.projectile_body);
     switch (collider._shape) {
       case Math::ShapeType::Rectangle:
         raylib::DrawRectangleLines(
@@ -144,9 +142,10 @@ void Renderer::DrawPlayerColliderShape() noexcept {
 
 void Renderer::DrawColliderShape() noexcept {
   DrawPlayerColliderShape();
-  for (auto& collider : game_logic->colliders_) {
-    auto physicsCollider = game_logic->world_.GetCollider(collider.colliderRef);
-    auto body = game_logic->world_.GetBody(collider.bodyRef);
+  for (auto& collider : game_logic_->colliders_) {
+    auto physicsCollider =
+        game_logic_->world_.GetCollider(collider.colliderRef);
+    auto body = game_logic_->world_.GetBody(collider.bodyRef);
 
     Color color = WHITE;
     switch (body.type) {
@@ -190,52 +189,58 @@ void Renderer::DrawColliderShape() noexcept {
 }
 
 void Renderer::DrawPlatforms() noexcept {
-  platform.Draw(raylib::Vector2{250, game::screen_height - 130}, 1.4f);
-  platform.Draw(
+  platform_.Draw(raylib::Vector2{250, game::screen_height - 130}, 1.4f);
+  platform_.Draw(
       raylib::Vector2{game::screen_width - 250, game::screen_height - 130},
       1.4f);
-  platform.Draw(
+  platform_.Draw(
       raylib::Vector2{game::screen_width * 0.5, game::screen_height - 240},
       1.4f);
 }
 
 void Renderer::DrawRopes() noexcept {
-  rope.Draw(raylib::Vector2{450, 160});
-  rope.Draw(raylib::Vector2{game::screen_width - 450, 160});
+  rope_.Draw(raylib::Vector2{450, 160});
+  rope_.Draw(raylib::Vector2{game::screen_width - 450, 160});
 }
 
 void Renderer::DrawPlayer() noexcept {
   raylib::Vector2 playerPosition =
-      raylib::Vector2{game_logic->player_manager.GetPlayerPosition(0).X,
-                      game_logic->player_manager.GetPlayerPosition(0).Y};
+      raylib::Vector2{game_logic_->player_manager.GetPlayerPosition(0).X,
+                      game_logic_->player_manager.GetPlayerPosition(0).Y};
 
-  if (game_logic->player_manager.players[0].is_projectile_ready) {
-    playerWeapon.Draw({playerPosition.x, playerPosition.y - 15}, 0.2f);
+  if (game_logic_->player_manager.players[0].is_projectile_ready) {
+    player_weapon_.Draw({playerPosition.x, playerPosition.y - 15}, 0.2f);
   }
-  player.Draw({playerPosition.x, playerPosition.y - 15});
+  player_.Draw({playerPosition.x, playerPosition.y - 15});
 
   raylib::Vector2 player2Position =
-      raylib::Vector2{game_logic->player_manager.GetPlayerPosition(1).X,
-                      game_logic->player_manager.GetPlayerPosition(1).Y};
+      raylib::Vector2{game_logic_->player_manager.GetPlayerPosition(1).X,
+                      game_logic_->player_manager.GetPlayerPosition(1).Y};
 
-  if (game_logic->player_manager.players[1].is_projectile_ready) {
-    playerWeapon.Draw({player2Position.x, player2Position.y - 15}, 0.2f);
+  if (game_logic_->player_manager.players[1].is_projectile_ready) {
+    player_weapon_.Draw({player2Position.x, player2Position.y - 15}, 0.2f);
   }
-  player2.Draw({player2Position.x, player2Position.y - 15});
+  player2_.Draw({player2Position.x, player2Position.y - 15});
 }
 
 void Renderer::DrawProjectiles() noexcept {
-  for (const auto projectile : game_logic->player_manager.projectiles_) {
-    auto body = game_logic->world_.GetBody(projectile.projectile_body);
-    playerWeapon.Draw(Vector2{body.Position().X, body.Position().Y}, 0.16f);
+  for (const auto projectile : game_logic_->player_manager.old_projectiles_) {
+    auto body = game_logic_->world_.GetBody(projectile.projectile_body);
+    player_weapon_.Draw(Vector2{body.Position().X, body.Position().Y}, 0.16f);
+  }
+
+  for (int i = 0; i < game_logic_->player_manager.max_projectile_; i++) {
+    auto pos = raylib::Vector2{game_logic_->player_manager.GetProjectilePosition(i).X,
+                        game_logic_->player_manager.GetProjectilePosition(i).Y};
+    player_weapon_.Draw(pos, 0.16f);
   }
 }
 
-void Renderer::DrawBackground() noexcept { background.Draw(center); }
+void Renderer::DrawBackground() noexcept { background_.Draw(center_pos_); }
 
 void Renderer::DrawLimit() noexcept {
-  borderBottom.Draw(raylib::Vector2{0, game::screen_height - 20});
-  borderLeft.Draw(raylib::Vector2{0 - 20, 0});
-  borderRight.Draw(raylib::Vector2{game::screen_width - 60, 0});
-  borderTop.Draw(raylib::Vector2{0 - 5, 0 - 5});
+  border_bottom_.Draw(raylib::Vector2{0, game::screen_height - 20});
+  border_left_.Draw(raylib::Vector2{0 - 20, 0});
+  border_right_.Draw(raylib::Vector2{game::screen_width - 60, 0});
+  border_top_.Draw(raylib::Vector2{0 - 5, 0 - 5});
 }

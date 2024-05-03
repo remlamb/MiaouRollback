@@ -36,7 +36,7 @@ namespace game {
 	 *
 	 * The class contains a physics world, player manager, and inputs manager as
 	 * member variables. It also maintains constants for screen width and height, as
-	 * well as parameters for platform and rope creation.
+	 * well as parameters for platform_ and rope creation.
 	 */
 	class GameLogic {
 	public:

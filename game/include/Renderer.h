@@ -5,7 +5,7 @@
 class Renderer {
  public:
   Renderer(game::GameLogic* gl, NetworkLogic* network_logic)
-      : game_logic(gl), network_logic_(network_logic) {}
+      : game_logic_(gl), network_logic_(network_logic) {}
   void Init() noexcept;
   void Draw(bool isColliderVisible) noexcept;
   void Deinit() noexcept;
@@ -26,22 +26,22 @@ class Renderer {
   void DrawBackground() noexcept;
   void DrawLimit() noexcept;
 
-  game::GameLogic* game_logic = nullptr;
+  game::GameLogic* game_logic_ = nullptr;
   NetworkLogic* network_logic_ = nullptr;
 
-  ImageCustom player;
-  ImageCustom player2;
-  ImageCustom playerWeapon;
-  ImageCustom background;
-  ImageCustom platform;
-  ImageCustom rope;
-  ImageCustom main_menu_bg;
+  ImageCustom player_;
+  ImageCustom player2_;
+  ImageCustom player_weapon_;
+  ImageCustom background_;
+  ImageCustom platform_;
+  ImageCustom rope_;
+  ImageCustom main_menu_bg_;
 
-  ImageCustom borderBottom;
-  ImageCustom borderLeft;
-  ImageCustom borderRight;
-  ImageCustom borderTop;
-  ImageCustom icon;
-  raylib::Vector2 center = {game::screen_width * 0.5f,
+  ImageCustom border_bottom_;
+  ImageCustom border_left_;
+  ImageCustom border_right_;
+  ImageCustom border_top_;
+  ImageCustom icon_;
+  raylib::Vector2 center_pos_ = {game::screen_width * 0.5f,
                             game::screen_height * 0.5f};
 };
