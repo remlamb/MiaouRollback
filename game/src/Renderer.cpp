@@ -10,7 +10,7 @@ void Renderer::Init() noexcept {
   player_.Setup("data/player1.png", 0.22f, Pivot::Center);
   player2_.Setup("data/player2.png", 0.22f, Pivot::Center);
   player_weapon_.Setup("data/weapon.png", 1.0f, Pivot::Center);
-  background_.Setup("data/bg2.png", 1.0f, Pivot::Center);
+  background_.Setup("data/bg.png", 1.0f, Pivot::Center);
   platform_.Setup("data/platform.png", 0.10f, Pivot::Center);
   rope_.Setup("data/rope.png", 1.0f, Pivot::Center);
 
@@ -32,6 +32,7 @@ void Renderer::Draw(bool isColliderVisible) noexcept {
   }
 
   if (game_logic_->current_game_state == game::GameState::GameLaunch) {
+      DrawBackground();
     raylib::ClearBackground(raylib::Color{36, 77, 99, 1});
     if (isColliderVisible) {
       DrawColliderShape();
