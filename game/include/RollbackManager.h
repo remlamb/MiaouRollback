@@ -20,91 +20,97 @@
  * corresponds to their checksum for this given state.
  */
 class RollbackManager {
-public:
-	void RegisterGameManager(game::GameLogic* current_game_manager) noexcept {
-		current_game_manager_ = current_game_manager;
-		confirmed_game_manager_.Init();
+ public:
+  void RegisterGameManager(game::GameLogic* current_game_manager) noexcept {
+    current_game_manager_ = current_game_manager;
+    confirmed_game_manager_.Init();
 
-		for (std::size_t i = 0; i < game::max_player; i++) {
-			inputs_[i].resize(kMaxFrameCount);
-		}
-	}
+    for (std::size_t i = 0; i < game::max_player; i++) {
+      inputs_[i].resize(kMaxFrameCount);
+    }
+  }
 
-	void SetLocalPlayerInput(const Input::FrameInput& local_input, int player_id) noexcept;
-	void SetRemotePlayerInput(const std::vector<Input::FrameInput>& new_remote_inputs,
-		int player_id);
+  void SetLocalPlayerInput(const Input::FrameInput& local_input,
+                           int player_id) noexcept;
+  void SetRemotePlayerInput(
+      const std::vector<Input::FrameInput>& new_remote_inputs, int player_id);
 
-	void SimulateUntilCurrentFrame() const noexcept;
-	int ConfirmFrame() noexcept;
+  void SimulateUntilCurrentFrame() const noexcept;
+  int ConfirmFrame() noexcept;
 
-	[[nodiscard]] const Input::FrameInput& GetLastPlayerConfirmedInput(
-		int player_id) const noexcept;
+  [[nodiscard]] const Input::FrameInput& GetLastPlayerConfirmedInput(
+      int player_id) const noexcept;
 
-	[[nodiscard]] short current_frame() const noexcept {
-		return current_frame_;
-	}
+  [[nodiscard]] short current_frame() const noexcept { return current_frame_; }
 
-	void IncreaseCurrentFrame() noexcept { current_frame_++; }
+  void IncreaseCurrentFrame() noexcept { current_frame_++; }
 
-	[[nodiscard]] short confirmed_frame() const noexcept {
-		return confirmed_frame_;
-	}
+  [[nodiscard]] short confirmed_frame() const noexcept {
+    return confirmed_frame_;
+  }
 
-	[[nodiscard]] short last_remote_input_frame() const noexcept {
-		return last_remote_input_frame_;
-	}
+  [[nodiscard]] short last_remote_input_frame() const noexcept {
+    return last_remote_input_frame_;
+  }
 
-	[[nodiscard]] short frame_to_confirm() const noexcept {
-		return frame_to_confirm_;
-	}
+  [[nodiscard]] short frame_to_confirm() const noexcept {
+    return frame_to_confirm_;
+  }
 
-	/**
- * \brief confirmed_player_manager_ is a copy of the client's player_manager
- * at the last confirmed frame state.
- */
-	game::GameLogic confirmed_game_manager_{ this };
+  void Reset() noexcept {
+    current_frame_ = -1;
+    last_remote_input_frame_ = -1;
+    frame_to_confirm_ = 0;
+    confirmed_frame_ = -1;
+    for (auto& input : inputs_) {
+      input.clear();
+    }
+    last_inputs_.fill({});
+  }
 
-private:
-	/**
-	 * \brief current_game_manager_ is a pointer to local client's GameManager.
-	 */
-	game::GameLogic* current_game_manager_ = nullptr;
+  /**
+   * \brief confirmed_player_manager_ is a copy of the client's player_manager
+   * at the last confirmed frame state.
+   */
+  game::GameLogic confirmed_game_manager_{this};
 
+ private:
+  /**
+   * \brief current_game_manager_ is a pointer to local client's GameManager.
+   */
+  game::GameLogic* current_game_manager_ = nullptr;
 
+  /**
+   * \brief The frame nbr of the local client.
+   */
+  short current_frame_ = -1;
 
-	/**
-	 * \brief The frame nbr of the local client.
-	 */
-	short current_frame_ = -1;
+  /**
+   * \brief The frame number of the last time a remote input was received.
+   */
+  short last_remote_input_frame_ = -1;
 
-	/**
-	 * \brief The frame number of the last time a remote input was received.
-	 */
-	short last_remote_input_frame_ = -1;
+  /**
+   * \brief The frame number which the master client wants to confirm.
+   */
+  short frame_to_confirm_ = 0;
 
-	/**
-	 * \brief The frame number which the master client wants to confirm.
-	 */
-	short frame_to_confirm_ = 0;
+  /**
+   * \brief The frame number of the last confirmed frame (frame verified with
+   * checksum).
+   */
+  short confirmed_frame_ = -1;
 
-	/**
-	 * \brief The frame number of the last confirmed frame (frame verified with
-	 * checksum).
-	 */
-	short confirmed_frame_ = -1;
+  /**
+   * \brief kMaxFrameCount is the maximum of frame that the game can last.
+   * Here 30'000 corresponds to 10 minutes at a fixed 50fps.
+   */
+  static constexpr short kMaxFrameCount = 30'000;
 
-	/**
-	 * \brief kMaxFrameCount is the maximum of frame that the game can last.
-	 * Here 30'000 corresponds to 10 minutes at a fixed 50fps.
-	 */
-	static constexpr short kMaxFrameCount = 30'000;
-
-	std::array<std::vector<Input::FrameInput>,
-		game::max_player> inputs_{};
-	/**
-	 * \brief last_inputs_ is an array which stores the last inputs received by the
-	 * different players.
-	 */
-	std::array<Input::FrameInput, game::max_player> last_inputs_{};
+  std::array<std::vector<Input::FrameInput>, game::max_player> inputs_{};
+  /**
+   * \brief last_inputs_ is an array which stores the last inputs received by
+   * the different players.
+   */
+  std::array<Input::FrameInput, game::max_player> last_inputs_{};
 };
-

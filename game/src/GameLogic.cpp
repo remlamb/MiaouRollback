@@ -157,7 +157,6 @@ void GameLogic::OnFrameConfirmationReceived(
 }
 
 void GameLogic::Init() noexcept {
-  timer_.OnStart();
   world_.Init();
   player_manager.SetUp();
 
@@ -272,10 +271,17 @@ void GameLogic::Update() noexcept {
 }
 
 void GameLogic::DeInit() noexcept {
-  world_.Clear();
 
-  world_.contactListener = nullptr;
-  colliders_.empty();
+  //world_.Clear();
+  //world_.contactListener = nullptr;
+  //colliders_.clear();
+  client_player_nbr = invalid_client_player_nbr;
+  while (!network_events.empty()) {
+    network_events.pop();
+  }
+  last_inputs.clear();
+  player_manager.ResetState();
+  Update();
 }
 
 void GameLogic::ManageInput() noexcept {

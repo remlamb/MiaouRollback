@@ -119,11 +119,15 @@ void GameApp::DrawImgui() {
     {
       ImGui::TextWrapped("--- Game: ---");
       ImGui::Spacing();
-      if (ImGui::Button("Re-match", ImVec2(125, 25))) {
-        // networkLogic_.Disconnect();
+      if (ImGui::Button("Return to Main Menu", ImVec2(125, 25))) {
+        game_logic.DeInit();
+        rollback_manager.Reset();
+        networkLogic_.Disconnect();
       }
+      ImGui::Spacing();
       if (ImGui::Button("Quit", ImVec2(125, 25))) {
-        // networkLogic_.Disconnect();
+        networkLogic_.Disconnect();
+        Deinit();
       }
       ImGui::Spacing();
       ImGui::Text("");

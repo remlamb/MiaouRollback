@@ -137,6 +137,14 @@ void PlayerManager::Update() {
   }
 }
 
+void PlayerManager::ResetState() {
+  ResetProjectiles();
+  players[0].life_point = 5;
+  players[1].life_point = 5;
+  world_->GetBody(players_BodyRefs_[0]).SetPosition(player1_spawn_pos_);
+  world_->GetBody(players_BodyRefs_[1]).SetPosition(player2_spawn_pos_);
+}
+
 void PlayerManager::Jump(int playerIdx) {
   auto& body = world_->GetBody(players_BodyRefs_[playerIdx]);
   if (players[playerIdx].is_grounded) {
@@ -167,26 +175,75 @@ void PlayerManager::Attack(int player_idx) {
   if (players[player_idx].attack_timer <= 0.0f) {
     players[player_idx].attack_timer = time_between_attack;
     players[player_idx].is_projectile_ready = false;
-
-    //// create a new world collider for the projectile
-    // Physics::BodyRef bodyRef = world_->CreateBody();
-    // auto& newBody = world_->GetBody(bodyRef);
-    // newBody.SetMass(1);
-    // newBody.SetPosition(GetPlayerPosition(player_idx));
-    // newBody.SetVelocity(projectile_speed_);
-    // newBody.type = Physics::BodyType::DYNAMIC;
-
-    // Physics::ColliderRef colliderRef = world_->CreateCollider(bodyRef);
-    // auto& newCollider = world_->GetCollider(colliderRef);
-    // newCollider._shape = Math::ShapeType::Circle;
-    // newCollider.isTrigger = true;
-    // newCollider.restitution = 0.0f;
-    // newCollider.circleShape.SetRadius(projectile_radius_);
-    // newCollider.ID = current_projectile_collider_id_++;
-    // auto projectile = Projectile{bodyRef, colliderRef};
-    // projectile.nbr_launching_player = player_idx;
-    // old_projectiles_.emplace_back(projectile);
     GetNewProjectile(player_idx);
+  }
+}
+
+void PlayerManager::ProjectileTriggerDetection(Physics::Collider colliderA,
+                                               Physics::Collider colliderB,
+                                               Projectile& projectile) {
+  // On launch the projectiles are assigned to a player (the launcher),
+  // i can manage with the if the fact that it damage only the other player,
+  // once on the ground I change their id because they all have the same dmg
+  // behavior when on the ground (hit every one).
+  if (colliderA == world_->GetCollider(projectile.projectile_collider) ||
+      colliderB == world_->GetCollider(projectile.projectile_collider)) {
+    // todo better code to stop the projectile only in contact of platform
+    if (colliderA.ID == 10 || colliderB.ID == 10) {
+      auto& body = world_->GetBody(projectile.projectile_body);
+      body.SetVelocity(Math::Vec2F(0, 0));
+      auto& projectile_collider =
+          world_->GetCollider(projectile.projectile_collider);
+      projectile_collider.ID = neutral_projectile_id_;
+    }
+
+    if (colliderA.ID == player1_collider_id_ ||
+        colliderB.ID == player1_collider_id_) {
+      if (projectile.nbr_launching_player != 0) {
+        ResetProjectiles();
+        world_->GetBody(players_BodyRefs_[0]).SetPosition(player1_spawn_pos_);
+        world_->GetBody(players_BodyRefs_[1]).SetPosition(player2_spawn_pos_);
+        players[0].life_point--;
+
+        return;
+      }
+    }
+    if (colliderA.ID == player2_collider_id_ ||
+        colliderB.ID == player2_collider_id_) {
+      if (projectile.nbr_launching_player != 1) {
+        ResetProjectiles();
+        world_->GetBody(players_BodyRefs_[0]).SetPosition(player1_spawn_pos_);
+        world_->GetBody(players_BodyRefs_[1]).SetPosition(player2_spawn_pos_);
+        players[1].life_point--;
+
+        return;
+      }
+    }
+
+    // if neutral and player 1 or player 2
+    if ((colliderA.ID == neutral_projectile_id_ ||
+         colliderB.ID == neutral_projectile_id_) &&
+        (colliderA.ID == player1_collider_id_ ||
+         colliderB.ID == player1_collider_id_)) {
+      ResetProjectiles();
+      world_->GetBody(players_BodyRefs_[0]).SetPosition(player1_spawn_pos_);
+      world_->GetBody(players_BodyRefs_[1]).SetPosition(player2_spawn_pos_);
+      players[0].life_point--;
+
+      return;
+    }
+
+    if ((colliderA.ID == neutral_projectile_id_ ||
+         colliderB.ID == neutral_projectile_id_) &&
+        (colliderA.ID == player2_collider_id_ ||
+         colliderB.ID == player2_collider_id_)) {
+      ResetProjectiles();
+      world_->GetBody(players_BodyRefs_[0]).SetPosition(player1_spawn_pos_);
+      world_->GetBody(players_BodyRefs_[1]).SetPosition(player2_spawn_pos_);
+      players[1].life_point--;
+
+      return;
+    }
   }
 }
 
@@ -196,6 +253,7 @@ void PlayerManager::OnTriggerEnter(Physics::Collider colliderA,
   for (auto& player : players) {
     if (colliderA == world_->GetCollider(players_grounded_CollidersRefs_[it]) ||
         colliderB == world_->GetCollider(players_grounded_CollidersRefs_[it])) {
+      // No detection for playersgrounded and projectile
       if (colliderA.ID >= projectile_id_ || colliderB.ID >= projectile_id_) {
         break;
       }
@@ -203,9 +261,7 @@ void PlayerManager::OnTriggerEnter(Physics::Collider colliderA,
           colliderB.ID == neutral_projectile_id_) {
         break;
       }
-      // Undefined Behavior quand le player etait touché en saut le trigger
-      // etait enclencher au moment ou je reset les projectiles en les remettant
-      // invalide a l ID -1
+      // When projectile is set unvalid, player was detecting trigger
       if (colliderA.ID == -1 || colliderB.ID == -1) {
         break;
       }
@@ -215,69 +271,7 @@ void PlayerManager::OnTriggerEnter(Physics::Collider colliderA,
   }
 
   for (auto& projectile : projectiles_) {
-    // On launch the projectiles are assigned to a player (the launcher),
-    // i can manage with the if the fact that it damage only the other player,
-    // once on the ground I change their id because they all have the same dmg
-    // behavior when on the ground (hit every one).
-    if (colliderA == world_->GetCollider(projectile.projectile_collider) ||
-        colliderB == world_->GetCollider(projectile.projectile_collider)) {
-      // todo better code to stop the projectile only in contact of platform
-      if (colliderA.ID == 10 || colliderB.ID == 10) {
-        auto& body = world_->GetBody(projectile.projectile_body);
-        body.SetVelocity(Math::Vec2F(0, 0));
-        auto& projectile_collider =
-            world_->GetCollider(projectile.projectile_collider);
-        projectile_collider.ID = neutral_projectile_id_;
-      }
-
-      if (colliderA.ID == player1_collider_id_ ||
-          colliderB.ID == player1_collider_id_) {
-        if (projectile.nbr_launching_player != 0) {
-          std::cout << "Touched ! " << std::endl;
-          ResetProjectiles();
-          world_->GetBody(players_BodyRefs_[0]).SetPosition(player1_spawn_pos_);
-          world_->GetBody(players_BodyRefs_[1]).SetPosition(player2_spawn_pos_);
-          players[0].life_point--;
-        }
-      }
-      if (colliderA.ID == player2_collider_id_ ||
-          colliderB.ID == player2_collider_id_) {
-        if (projectile.nbr_launching_player != 1) {
-          std::cout << "Touched ! " << std::endl;
-          ResetProjectiles();
-          world_->GetBody(players_BodyRefs_[0]).SetPosition(player1_spawn_pos_);
-          world_->GetBody(players_BodyRefs_[1]).SetPosition(player2_spawn_pos_);
-          players[1].life_point--;
-        }
-      }
-
-      // if neutral and player 1 or player 2
-      if ((colliderA.ID == neutral_projectile_id_ ||
-           colliderB.ID == neutral_projectile_id_) &&
-          (colliderA.ID == player1_collider_id_ ||
-           colliderB.ID == player1_collider_id_)) {
-        // todo manage projectile avec un slot limite
-        // old_projectiles_.clear();
-        std::cout << "Touched ! " << std::endl;
-        ResetProjectiles();
-        world_->GetBody(players_BodyRefs_[0]).SetPosition(player1_spawn_pos_);
-        world_->GetBody(players_BodyRefs_[1]).SetPosition(player2_spawn_pos_);
-        players[0].life_point--;
-      }
-
-      if ((colliderA.ID == neutral_projectile_id_ ||
-           colliderB.ID == neutral_projectile_id_) &&
-          (colliderA.ID == player2_collider_id_ ||
-           colliderB.ID == player2_collider_id_)) {
-        // todo manage projectile avec un slot limite
-        // old_projectiles_.clear();
-        std::cout << "Touched ! " << std::endl;
-        ResetProjectiles();
-        world_->GetBody(players_BodyRefs_[0]).SetPosition(player1_spawn_pos_);
-        world_->GetBody(players_BodyRefs_[1]).SetPosition(player2_spawn_pos_);
-        players[1].life_point--;
-      }
-    }
+    ProjectileTriggerDetection(colliderA, colliderB, projectile);
   }
 }
 void PlayerManager::OnTriggerExit(Physics::Collider colliderA,
@@ -293,9 +287,7 @@ void PlayerManager::OnTriggerExit(Physics::Collider colliderA,
           colliderB.ID == neutral_projectile_id_) {
         break;
       }
-      // Undefined Behavior quand le player etait touché en saut le trigger
-      // etait enclencher au moment ou je reset les projectiles en les remettant
-      // invalide a l ID -1
+      // When projectile is set unvalid, player was detecting trigger
       if (colliderA.ID == -1 || colliderB.ID == -1) {
         break;
       }
@@ -329,7 +321,6 @@ void PlayerManager::InitProjectiles() {
     projectile = Projectile{bodyRef, colliderRef};
     projectile.isActive = false;
   }
-  std::cout << projectiles_[20].isActive << std::endl;
 }
 
 void PlayerManager::ResetProjectiles() {
@@ -346,7 +337,6 @@ void PlayerManager::ResetProjectiles() {
 }
 
 void PlayerManager::GetNewProjectile(int player_idx) {
-  std::cout << projectiles_[20].isActive << std::endl;
   // Find the first projectile not enabled.
   const auto& projectile_it =
       std::find_if(projectiles_.begin(), projectiles_.end(),

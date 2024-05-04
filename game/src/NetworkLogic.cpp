@@ -83,6 +83,7 @@ void NetworkLogic::disconnectReturn() {
   std::cout << "client disconnected\n";
   currentLogInfo = "- client disconnected";
   is_connected = false;
+  game_logic_->current_game_state = game::GameState::LogMenu;
 }
 
 void NetworkLogic::leaveRoomReturn(

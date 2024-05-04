@@ -93,7 +93,7 @@ class PlayerManager : public Physics::ContactListener {
    * @brief Updates player entities and their interactions.
    */
   void Update();
-
+  void ResetState();
   /**
    * @brief Initiates a jump action for a specified player.
    * @param playerIdx Index of the player.
@@ -127,7 +127,6 @@ class PlayerManager : public Physics::ContactListener {
 
   std::array<Player, nbr_player_> players;
   // projectile confirmé
-  std::vector<Projectile> old_projectiles_;
   // add vector projectile detruit/noncomfirmé
 
   std::array<Physics::BodyRef, nbr_player_> players_BodyRefs_;
@@ -140,4 +139,7 @@ class PlayerManager : public Physics::ContactListener {
   void GetNewProjectile(int player_idx);
   Math::Vec2F GetProjectilePosition(int idx) const noexcept;
   void ResetProjectiles();
+  void ProjectileTriggerDetection(Physics::Collider colliderA,
+                                  Physics::Collider colliderB,
+                                  Projectile& projectile);
 };

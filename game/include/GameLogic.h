@@ -119,6 +119,5 @@ class GameLogic {
 
   const float border_size_ = 20.0f;
   const Math::Vec2F platform_size_{220.0f, 40.0f};
-  Physics::Timer timer_;
 };
 }  // namespace game

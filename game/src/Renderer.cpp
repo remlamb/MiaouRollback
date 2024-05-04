@@ -55,19 +55,17 @@ void Renderer::Draw(bool isColliderVisible) noexcept {
     raylib::ClearBackground(raylib::Color{36, 77, 99, 1});
     background_.Draw(center_pos_);
 
-    if (game_logic_->player_manager.players[0]
-            .life_point > 0) {
+    if (game_logic_->player_manager.players[0].life_point > 0) {
       winner_layer_p1.Draw(center_pos_);
     } else {
       winner_layer_p2.Draw(center_pos_);
     }
 
-
     if (game_logic_->player_manager.players[game_logic_->client_player_nbr]
             .life_point <= 0) {
       raylib::DrawRaylibText("Maybe Next Time?", 50, 40, 28, raylib::WHITE);
     } else {
-      raylib::DrawRaylibText("Congratulation", 50, 40, 28, raylib::WHITE);
+      raylib::DrawRaylibText("Congratulation!", 50, 40, 28, raylib::WHITE);
     }
   }
 }
@@ -241,11 +239,6 @@ void Renderer::DrawPlayer() noexcept {
 }
 
 void Renderer::DrawProjectiles() noexcept {
-  for (const auto projectile : game_logic_->player_manager.old_projectiles_) {
-    auto body = game_logic_->world_.GetBody(projectile.projectile_body);
-    player_weapon_.Draw(Vector2{body.Position().X, body.Position().Y}, 0.16f);
-  }
-
   for (int i = 0; i < game_logic_->player_manager.max_projectile_; i++) {
     auto pos =
         raylib::Vector2{game_logic_->player_manager.GetProjectilePosition(i).X,
@@ -264,7 +257,6 @@ void Renderer::DrawLimit() noexcept {
 }
 
 void Renderer::DrawUI() noexcept {
-
   for (int i = game_logic_->player_manager.players[0].life_point; i > 0; i--) {
     player1_life_point_.Draw(raylib::Vector2{static_cast<float>(50 * i), 40},
                              0.2f);
