@@ -43,6 +43,8 @@ class Renderer {
   ImageCustom border_right_;
   ImageCustom border_top_;
   ImageCustom icon_;
+  ImageCustom winner_layer_p1;
+  ImageCustom winner_layer_p2;
 
   ImageCustom player1_life_point_;
   ImageCustom player2_life_point_;

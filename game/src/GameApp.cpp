@@ -29,10 +29,9 @@ void GameApp::InitImgui() {
 }
 
 void GameApp::DrawImgui() {
+  ImGui_ImplRaylib_NewFrame();
+  ImGui::NewFrame();
   if (game_logic.current_game_state == game::GameState::LogMenu) {
-    ImGui_ImplRaylib_NewFrame();
-    ImGui::NewFrame();
-
     ImGui::SetNextWindowSize(ImVec2(280, 600));
     ImGui::SetNextWindowPos(ImVec2(80, 80));
 
@@ -62,11 +61,11 @@ void GameApp::DrawImgui() {
       ImGui::Text("");
       ImGui::Text("--- Option: ---");
       ImGui::Spacing();
-      ImGui::Checkbox("Show Collider Shape", &isColliderVisible_);
-      ImGui::Spacing();
       ImGui::SliderFloat("Volume", &audio_manager.audioVolume, 0.0f, 10.0f);
       ImGui::Spacing();
       ImGui::Checkbox("Play Sound", &audio_manager.isAudioPlaying);
+      ImGui::Spacing();
+      ImGui::Checkbox("Show Collider Shape", &isColliderVisible_);
       ImGui::Spacing();
 
       ImGui::Text("");
@@ -95,17 +94,13 @@ void GameApp::DrawImgui() {
       ImGui::Spacing();
       ImGui::TextWrapped("**Xbox Controller: South Btn = A,  West Btn = X");
       ImGui::Spacing();
-      ImGui::TextWrapped("**Sony Controller: South Btn = X,  West Btn = Square");
+      ImGui::TextWrapped(
+          "**Sony Controller: South Btn = X,  West Btn = Square");
     }
-    ImGui::End();
-    ImGui::Render();
-    ImGui_ImplRaylib_RenderDrawData(ImGui::GetDrawData());
   }
 
   if (game_logic.current_game_state == game::GameState::GameLaunch) {
     if (isGameOptionVisible) {
-      ImGui_ImplRaylib_NewFrame();
-      ImGui::NewFrame();
       ImGui::Begin("Game Option");
       {
         ImGui::SliderFloat("Volume", &audio_manager.audioVolume, 0.0f, 10.0f);
@@ -114,25 +109,33 @@ void GameApp::DrawImgui() {
         ImGui::Spacing();
         ImGui::Checkbox("Show Collider Shape", &isColliderVisible_);
       }
-      ImGui::End();
-      ImGui::Render();
-      ImGui_ImplRaylib_RenderDrawData(ImGui::GetDrawData());
     }
   }
 
   if (game_logic.current_game_state == game::GameState::GameVictory) {
-    ImGui_ImplRaylib_NewFrame();
-    ImGui::NewFrame();
-    ImGui::Begin("End Menu");
+    ImGui::SetNextWindowSize(ImVec2(280, 600));
+    ImGui::SetNextWindowPos(ImVec2(80, 80));
+    ImGui::Begin("Ending Menu");
     {
-      if (ImGui::Button("Disconnect", ImVec2(125, 25))) {
-        networkLogic_.Disconnect();
+      ImGui::TextWrapped("--- Game: ---");
+      ImGui::Spacing();
+      if (ImGui::Button("Re-match", ImVec2(125, 25))) {
+        // networkLogic_.Disconnect();
       }
+      if (ImGui::Button("Quit", ImVec2(125, 25))) {
+        // networkLogic_.Disconnect();
+      }
+      ImGui::Spacing();
+      ImGui::Text("");
+      ImGui::TextWrapped("--- More: ---");
+      ImGui::Spacing();
+      ImGui::TextWrapped("Thank you for playing");
+      ImGui::Spacing();
     }
-    ImGui::End();
-    ImGui::Render();
-    ImGui_ImplRaylib_RenderDrawData(ImGui::GetDrawData());
   }
+  ImGui::End();
+  ImGui::Render();
+  ImGui_ImplRaylib_RenderDrawData(ImGui::GetDrawData());
 }
 
 void GameApp::Deinit() {

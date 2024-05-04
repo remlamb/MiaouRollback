@@ -68,8 +68,8 @@ class PlayerManager : public Physics::ContactListener {
   static constexpr float projectile_radius_ = 24.0f;
   static constexpr int projectile_id_ = 20;
   static constexpr int neutral_projectile_id_ = 18;
-  static constexpr Math::Vec2F projectile_speed_ = Math::Vec2F(0, 480);
-  static constexpr float time_between_attack = 1.0f;
+  static constexpr Math::Vec2F projectile_speed_ = Math::Vec2F(0, 580);
+  static constexpr float time_between_attack = 1.8f;
 
   int current_projectile_collider_id_ = projectile_id_;
   // std::array<int, nbr_player_> trigger_nbrs_;
