@@ -10,7 +10,7 @@ void GameApp::Init() {
   audio_manager.Init();
   InitImgui();
   game_logic.Init();
-  game_logic.RegisterNetworkLogic(&networkLogic_);
+  game_logic.RegisterNetworkLogic(&network_logic);
   rollback_manager.RegisterGameManager(&game_logic);
   raylib::SetExitKey(KEY_NULL);
   Input::FrameInput::registerType();
@@ -39,33 +39,33 @@ void GameApp::DrawImgui() {
     {
       ImGui::Text("--- Online: ---");
       ImGui::Spacing();
-      if (!networkLogic_.is_connected) {
+      if (!network_logic.is_connected) {
         if (ImGui::Button("Connect", ImVec2(125, 25))) {
-          networkLogic_.Connect();
+          network_logic.Connect();
         }
         ImGui::Spacing();
       }
 
-      if (networkLogic_.is_connected) {
+      if (network_logic.is_connected) {
         if (ImGui::Button("Join Game", ImVec2(125, 25))) {
-          networkLogic_.JoinRandomOrCreateRoom();
+          network_logic.JoinRandomOrCreateRoom();
         }
 
         ImGui::Spacing();
 
         if (ImGui::Button("Disconnect", ImVec2(125, 25))) {
-          networkLogic_.Disconnect();
+          network_logic.Disconnect();
         }
       }
       ImGui::Spacing();
       ImGui::Text("");
       ImGui::Text("--- Option: ---");
       ImGui::Spacing();
-      ImGui::SliderFloat("Volume", &audio_manager.audioVolume, 0.0f, 10.0f);
+      ImGui::SliderFloat("Volume", &audio_manager.audio_volume, 0.0f, 10.0f);
       ImGui::Spacing();
-      ImGui::Checkbox("Play Sound", &audio_manager.isAudioPlaying);
+      ImGui::Checkbox("Play Sound", &audio_manager.is_audio_playing);
       ImGui::Spacing();
-      ImGui::Checkbox("Show Collider Shape", &isColliderVisible_);
+      ImGui::Checkbox("Show Collider Shape", &is_collider_visible_);
       ImGui::Spacing();
 
       ImGui::Text("");
@@ -100,14 +100,14 @@ void GameApp::DrawImgui() {
   }
 
   if (game_logic.current_game_state == game::GameState::GameLaunch) {
-    if (isGameOptionVisible) {
+    if (is_game_option_visible_) {
       ImGui::Begin("Game Option");
       {
-        ImGui::SliderFloat("Volume", &audio_manager.audioVolume, 0.0f, 10.0f);
+        ImGui::SliderFloat("Volume", &audio_manager.audio_volume, 0.0f, 10.0f);
         ImGui::Spacing();
-        ImGui::Checkbox("Play Sound", &audio_manager.isAudioPlaying);
+        ImGui::Checkbox("Play Sound", &audio_manager.is_audio_playing);
         ImGui::Spacing();
-        ImGui::Checkbox("Show Collider Shape", &isColliderVisible_);
+        ImGui::Checkbox("Show Collider Shape", &is_collider_visible_);
       }
     }
   }
@@ -122,11 +122,11 @@ void GameApp::DrawImgui() {
       if (ImGui::Button("Return to Main Menu", ImVec2(125, 25))) {
         game_logic.DeInit();
         rollback_manager.Reset();
-        networkLogic_.Disconnect();
+        network_logic.Disconnect();
       }
       ImGui::Spacing();
       if (ImGui::Button("Quit", ImVec2(125, 25))) {
-        networkLogic_.Disconnect();
+        network_logic.Disconnect();
         Deinit();
       }
       ImGui::Spacing();
@@ -154,11 +154,11 @@ void GameApp::Deinit() {
 
 void GameApp::Loop(void) {
   game_logic.Update();
-  networkLogic_.Run();
+  network_logic.Run();
 
   if (game_logic.current_game_state == game::GameState::GameLaunch) {
     if (IsKeyReleased(KEY_ESCAPE)) {
-      isGameOptionVisible = !isGameOptionVisible;
+      is_game_option_visible_ = !is_game_option_visible_;
     }
   }
 
@@ -168,7 +168,7 @@ void GameApp::Loop(void) {
   raylib::BeginDrawing();
   {
     raylib::ClearBackground(raylib::BLACK);
-    game_renderer.Draw(isColliderVisible_);
+    game_renderer.Draw(is_collider_visible_);
   }
   DrawImgui();
   raylib::EndDrawing();

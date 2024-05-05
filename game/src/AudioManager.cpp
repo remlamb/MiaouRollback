@@ -1,24 +1,22 @@
 #include "AudioManager.h"
 
-void AudioManager::Init() {
-  sound = raylib::LoadSound("data/walkman.wav");
+void AudioManager::Init() noexcept {
   music = raylib::LoadMusicStream("data/theme.wav");
   music.looping = true;
 }
 
-void AudioManager::Deinit() {
-  UnloadSound(sound);  // Unload sound
+void AudioManager::Deinit() noexcept {
   UnloadMusicStream(music);
   raylib::CloseAudioDevice();
 }
 
-void AudioManager::Update() {
+void AudioManager::Update() const noexcept {
   if (game_logic_->current_game_state != game::GameState::GameLaunch) {
     return;
   }
-  if (isAudioPlaying) {
+  if (is_audio_playing) {
     PlayMusicStream(music);
-    SetMusicVolume(music, audioVolume);
+    SetMusicVolume(music, audio_volume);
     UpdateMusicStream(music);
   }
 }
