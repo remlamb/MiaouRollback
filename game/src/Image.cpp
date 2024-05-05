@@ -14,7 +14,7 @@ void ImageCustom::SetupIcon(const char* path, Pivot mode) {
 
 void ImageCustom::TearDown() { UnloadTexture(sprite); }
 
-void ImageCustom::Draw(Vector2 position) const {
+void ImageCustom::Draw(Vector2 position) const noexcept {
   if (pivot == Pivot::Center) {
     position.x -= sprite.width * originalScale * 0.5f;
     position.y -= sprite.height * originalScale * 0.5f;
@@ -22,7 +22,7 @@ void ImageCustom::Draw(Vector2 position) const {
   DrawTextureEx(sprite, position, 0.f, originalScale, WHITE);
 }
 
-void ImageCustom::Draw(Vector2 position, float scale) {
+void ImageCustom::Draw(Vector2 position, float scale) const noexcept {
   if (pivot == Pivot::Center) {
     position.x -= sprite.width * originalScale * scale * 0.5f;
     position.y -= sprite.height * originalScale * scale * 0.5f;

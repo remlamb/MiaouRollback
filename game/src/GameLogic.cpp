@@ -103,7 +103,7 @@ void GameLogic::SendFrameConfirmationEvent(
 
 void GameLogic::OnFrameConfirmationReceived(
     const ExitGames::Common::Hashtable& event_content) {
-  if (client_player_nbr == kMasterClientId) {
+  if (client_player_nbr == master_client_ID) {
     last_inputs.erase(last_inputs.begin());
     return;
   }
@@ -214,8 +214,6 @@ void GameLogic::OnInputReceived(const ExitGames::Common::Hashtable& content) {
   for (int i = 0; i < inputs_count; i++) {
     Input::FrameInput frame_input{inputs[i]};
     remote_frame_inputs.push_back(frame_input);
-    // std::cout << static_cast<int>(frame_input.input) << " , " <<
-    // frame_input.frame_nbr << std::endl;
   }
 
   if (remote_frame_inputs.back().frame_nbr <
@@ -227,7 +225,7 @@ void GameLogic::OnInputReceived(const ExitGames::Common::Hashtable& content) {
   const int other_client_id = client_player_nbr == 0 ? 1 : 0;
   rollback_manager->SetRemotePlayerInput(remote_frame_inputs, other_client_id);
 
-  if (client_player_nbr == kMasterClientId) {
+  if (client_player_nbr == master_client_ID) {
     SendFrameConfirmationEvent(remote_frame_inputs);
   }
 
@@ -271,17 +269,14 @@ void GameLogic::Update() noexcept {
 }
 
 void GameLogic::DeInit() noexcept {
-
-  //world_.Clear();
-  //world_.contactListener = nullptr;
-  //colliders_.clear();
+  world_.Clear();
+  world_.contactListener = nullptr;
+  colliders_.clear();
   client_player_nbr = invalid_client_player_nbr;
   while (!network_events.empty()) {
     network_events.pop();
   }
   last_inputs.clear();
-  player_manager.ResetState();
-  Update();
 }
 
 void GameLogic::ManageInput() noexcept {
