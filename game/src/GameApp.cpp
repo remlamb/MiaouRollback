@@ -122,6 +122,7 @@ void GameApp::DrawImgui() {
       if (ImGui::Button("Return to Main Menu", ImVec2(125, 25))) {
         game_logic.DeInit();
         rollback_manager.Reset();
+        game_logic.Init();
         network_logic.Disconnect();
       }
       ImGui::Spacing();

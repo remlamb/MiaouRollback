@@ -1,5 +1,4 @@
 ﻿#include "GameApp.h"
-#include "PhotonApp.h"
 
 int main() {
 
