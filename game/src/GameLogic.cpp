@@ -112,7 +112,8 @@ void GameLogic::OnFrameConfirmationReceived(
 
   const auto checksum_value =
       event_content.getValue(static_cast<nByte>(EventKey::kCheckSum));
-  int checksum = ExitGames::Common::ValueObject<int>(checksum_value).getDataCopy();
+  int checksum =
+      ExitGames::Common::ValueObject<int>(checksum_value).getDataCopy();
 
   const auto input_value =
       event_content.getValue(static_cast<nByte>(EventKey::kPlayerInput));
@@ -160,7 +161,6 @@ void GameLogic::Init() noexcept {
   world_.Init();
   player_manager.SetUp();
 
-
   //// Border
   CreatePlatform({0, 0}, {0.0, 0.0}, {game::screen_width, border_size_});
   CreatePlatform({0, 0}, {0.0, 0.0}, {border_size_, game::screen_height});
@@ -205,9 +205,8 @@ void GameLogic::OnInputReceived(const ExitGames::Common::Hashtable& content) {
       *ExitGames::Common::ValueObject<Input::FrameInput*>(input_value)
            .getSizes();
 
-  if (inputs_count <= 0)
-  {
-	  return;
+  if (inputs_count <= 0) {
+    return;
   }
 
   remote_frame_inputs.reserve(inputs_count);
@@ -261,7 +260,6 @@ void GameLogic::Update() noexcept {
     SetPlayerInput(input, i);
   }
   UpdateGameplay();
-  //
   if (player_manager.players[0].life_point <= 0 ||
       player_manager.players[1].life_point <= 0) {
     current_game_state = GameState::GameVictory;
@@ -277,6 +275,15 @@ void GameLogic::DeInit() noexcept {
     network_events.pop();
   }
   last_inputs.clear();
+}
+
+void GameLogic::ResetState() noexcept {
+  client_player_nbr = invalid_client_player_nbr;
+  while (!network_events.empty()) {
+    network_events.pop();
+  }
+  last_inputs.clear();
+  player_manager.ResetState();
 }
 
 void GameLogic::ManageInput() noexcept {

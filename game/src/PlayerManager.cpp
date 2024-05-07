@@ -139,10 +139,12 @@ void PlayerManager::Update() {
 
 void PlayerManager::ResetState() {
   ResetProjectiles();
-  players[0].life_point = 5;
-  players[1].life_point = 5;
   world_->GetBody(players_BodyRefs_[0]).SetPosition(player1_spawn_pos_);
   world_->GetBody(players_BodyRefs_[1]).SetPosition(player2_spawn_pos_);
+  players[0].life_point = 5;
+  players[1].life_point = 5;
+  players[0].trigger_nbr = 0;
+  players[1].trigger_nbr = 0;
 }
 
 void PlayerManager::Jump(int playerIdx) {
