@@ -6,7 +6,7 @@ namespace Physics
     void World::Init() noexcept
     {
 #ifdef TRACY_ENABLE
-        ZoneScoped;
+        //ZoneScoped;
 #endif
         Clear();
         _bodies.resize(initSizeForVector);
@@ -19,7 +19,7 @@ namespace Physics
     void World::Clear() noexcept
     {
 #ifdef TRACY_ENABLE
-        ZoneScoped;
+        //ZoneScoped;
 #endif
         _bodies.clear();
         _genIndices.clear();
@@ -31,7 +31,7 @@ namespace Physics
     void World::Update(float deltaTime) noexcept
     {
 #ifdef TRACY_ENABLE
-        ZoneScoped;
+        //ZoneScoped;
 #endif
         for (auto& body: _bodies)
         {
@@ -143,7 +143,7 @@ namespace Physics
     bool World::IsContact(const Collider& colliderA, const Collider& colliderB) noexcept
     {
 #ifdef TRACY_ENABLE
-        ZoneScoped;
+        //ZoneScoped;
 #endif
         if (colliderA._shape == Math::ShapeType::Circle)
         {
@@ -173,7 +173,7 @@ namespace Physics
     void World::ResolveBroadPhase() noexcept
     {
 #ifdef TRACY_ENABLE
-        ZoneScoped;
+        //ZoneScoped;
 #endif
         tree.Clear();
         for (std::size_t i = 0; i < _colliders.size(); i++)
@@ -203,7 +203,7 @@ namespace Physics
     void World::ResolveNarrowPhase() noexcept
     {
 #ifdef TRACY_ENABLE
-        ZoneScoped;
+        //ZoneScoped;
 #endif
         tree.FindPossiblePairs(tree.nodes[0]);
         for (auto& pair: tree.nodeColliderPairs)

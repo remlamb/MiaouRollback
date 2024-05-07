@@ -11,6 +11,9 @@ endif ()
 find_package(raylib REQUIRED)
 find_package(ImGui CONFIG REQUIRED)
 
+# Add a CMake option to enable or disable Tracy Profiler
+option(USE_TRACY "Use Tracy Profiler" OFF)
+
 if (USE_TRACY)
     # Enable Tracy profiling by setting the preprocessor directive
     add_compile_definitions(TRACY_ENABLE)

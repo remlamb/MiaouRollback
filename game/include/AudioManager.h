@@ -19,7 +19,7 @@ class AudioManager {
  public:
   bool is_audio_playing =
       true;                   // Indicates whether audio is currently playing.
-  float audio_volume = 0.5f;  // The volume level of the audio.
+  float audio_volume = 0.22f;  // The volume level of the audio.
 
   /**
    * @brief Constructs an AudioManager object with a pointer to the game logic.

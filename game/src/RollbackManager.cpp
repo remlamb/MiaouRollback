@@ -8,14 +8,12 @@ void RollbackManager::SetLocalPlayerInput(const Input::FrameInput& local_input,
 
 void RollbackManager::SetRemotePlayerInput(
     const std::vector<Input::FrameInput>& new_remote_inputs, int player_id) {
-    // Retrieve the last remote frame input
     auto last_new_remote_input = new_remote_inputs.back();
 
     // Calculate the difference between the last new remote frame and the last remote
     // input frame
     const auto frame_diff = last_new_remote_input.frame_nbr - last_remote_input_frame_;
 
-    // If no new inputs received, return
     if (frame_diff < 1) {
         return;
     }
@@ -31,7 +29,6 @@ void RollbackManager::SetRemotePlayerInput(
         last_new_remote_input = *current_frame_it;
     }
 
-    // Find the position of the first missing input
     auto missing_input_it = std::find_if(
         new_remote_inputs.begin(), new_remote_inputs.end(),
         [this](const Input::FrameInput& frame_input) {

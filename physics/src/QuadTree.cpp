@@ -5,7 +5,7 @@ namespace Physics
     void QuadTree::Subdivide(QuadNode& node)
     {
 #ifdef TRACY_ENABLE
-        ZoneScoped;
+        //ZoneScoped;
 #endif
         const auto center = node.bounds.Center();
         const auto halfSize = node.bounds.Size() / 2;
@@ -34,7 +34,7 @@ namespace Physics
     void QuadTree::InsertInRootNode(const SimplifedCollider& simplifedCollider) noexcept
     {
 #ifdef TRACY_ENABLE
-        ZoneScoped;
+        //ZoneScoped;
 #endif
 
         auto& node = nodes[0];
@@ -64,7 +64,7 @@ namespace Physics
     void QuadTree::SubdivideNodeRecursively(QuadNode& node, int depth) noexcept
     {
 #ifdef TRACY_ENABLE
-        ZoneScoped;
+        //ZoneScoped;
 #endif
         if (node.colliders.size() > MaxColliderInNode && depth != MaxDepth)
         {
@@ -113,7 +113,7 @@ namespace Physics
     void QuadTree::FindPossiblePairs(QuadNode& node) noexcept
     {
 #ifdef TRACY_ENABLE
-        ZoneScoped;
+        //ZoneScoped;
 #endif
         for (std::size_t i = 0; i < node.colliders.size(); i++)
         {
@@ -148,7 +148,7 @@ namespace Physics
     void QuadTree::FindInChildrenNodePossiblePairs(QuadNode& node, Physics::ColliderRef& colliderRef) noexcept
     {
 #ifdef TRACY_ENABLE
-        ZoneScoped;
+        //ZoneScoped;
 #endif
         for (auto& nodeCollider: node.colliders)
         {

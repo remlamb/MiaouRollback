@@ -89,13 +89,13 @@ class PlayerManager : public Physics::ContactListener {
 private:
 	Physics::World* world_; /* The physics world for simulating game physics.*/
 	static constexpr float jump_velocity_ = -580.0f; /* The velocity applied when a player jumps*/
-	static constexpr float move_velocity_ = 500.0f; /* The velocity applied when a player moves*/
+	static constexpr float move_velocity_ = 720.0f; /* The velocity applied when a player moves*/
 	static constexpr float collider_radius_ = 28.0f; /* The radius of the player's collider*/
 	static constexpr float grounded_collider_pos_y_ = -20.0f; /* The Y position offset of the player's grounded collider*/
 	static constexpr Math::Vec2F grounded_collider_dimension_{ 10.0f, 10.0f }; /*The dimensions of the player's grounded collider*/
 
-	static constexpr float acceleration_time_ = 0.04f; /*The time it takes for a player to reach full velocity when accelerating*/
-	static constexpr float deceleration_time_ = 0.1f; /*The time it takes for a player to come to a stop when decelerating*/
+	static constexpr float acceleration_time_ = 0.05f; /*The time it takes for a player to reach full velocity when accelerating*/
+	static constexpr float deceleration_time_ = 0.12f; /*The time it takes for a player to come to a stop when decelerating*/
 
 	static constexpr int nbr_player_ = game::max_player; /*The number of players*/
 	static constexpr int player1_collider_id_ = 1; /*The collider ID for player 1*/
@@ -111,7 +111,7 @@ private:
 	static constexpr float projectile_radius_ = 24.0f; /*The radius of the projectile*/
 	static constexpr int projectile_id_ = 20; /* The ID of the projectile collider*/
 	static constexpr int neutral_projectile_id_ = 18; /*The ID of neutral projectiles collider*/
-	static constexpr Math::Vec2F projectile_speed_ = Math::Vec2F(0, 580); /*The speed of the projectile*/
+	static constexpr Math::Vec2F projectile_speed_ = Math::Vec2F(0, 720); /*The speed of the projectile*/
 	static constexpr float time_between_attack = 1.8f; /*The time between each attack action*/
 
 	int current_projectile_collider_id_ = projectile_id_; /*The ID of the current projectile collider, current projectile collider ID is increased for each collider created so each projectile are unique before being neutral*/
