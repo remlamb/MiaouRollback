@@ -1,4 +1,4 @@
-# MiaouRollback: a Real-Time Online Game?
+# MiaouRollback: a Real-Time Online Game!
 
 ## Libs
 - Network Powered by Photon
@@ -10,6 +10,9 @@
 
 ## Documentation link 
 [Documentation Rollback Game](https://remlamb.github.io/rollback/DocRollback/html/index.html)
+
+## Where to Play?
+[Release Available on my Github Page](https://github.com/remlamb/MiaouRollback/releases/tag/1.0)
 
 ## Prerequisites
 - CMake for building in Visual Studio 
